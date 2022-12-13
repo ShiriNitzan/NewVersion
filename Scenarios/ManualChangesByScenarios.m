@@ -1,6 +1,6 @@
 function [ManualScenariosTable] = ManualChangesByScenarios(Data)
     %% Create Scenarios Table
-    Years = 14;
+    Years = 34;
     ME = MException('MyComponent:noSuchVariable', ...
             'Not a valid number!');
 
@@ -92,8 +92,7 @@ function [ManualScenariosTable] = ManualChangesByScenarios(Data)
     %% Change In Energy Consumption From Renewable Energies
 
     x = input("Enter the Percentage of Electricity that will be Supplied from Renewable Energies in 2030: ");
-    CurrentEnergyConsumptionFromRenewableEnergies = Data.InitialPercentage(3);
-    CurrentEnergyConsumptionFromRenewableEnergies = CurrentEnergyConsumptionFromRenewableEnergies{1,1};
+    CurrentEnergyConsumptionFromRenewableEnergies = Data.InitialPercentage(1,3);
     if(0<=x && x<=1)
         if (x==0 || x==CurrentEnergyConsumptionFromRenewableEnergies)
             ManualScenariosTable{6,Years} = CurrentEnergyConsumptionFromRenewableEnergies;
@@ -122,8 +121,7 @@ function [ManualScenariosTable] = ManualChangesByScenarios(Data)
     %% Change In Energy Consumption From Natural Gas
 
     x = input("Enter the Percentage of Electricity that will be Supplied from Natural Gas in 2030: ");
-    CurrentEnergyConsumptionFromNaturalGas = readtable(Data,'Sheet','ElectricityConsumption','Range','C14:C14','ReadVariableNames',false);
-    CurrentEnergyConsumptionFromNaturalGas = CurrentEnergyConsumptionFromNaturalGas{1,1};
+    CurrentEnergyConsumptionFromNaturalGas = Data.InitialPercentage(1,2);
     if(0<=x && x<=1)
         if (x==0 || x==CurrentEnergyConsumptionFromNaturalGas)
             ManualScenariosTable{7,Years} = CurrentEnergyConsumptionFromNaturalGas;

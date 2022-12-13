@@ -10,9 +10,9 @@ switch index
     
     case 1 %% manual changes
     
-        ManualScenariosTable = ManualChangesByScenarios(Data);
+        ManualScenariosTable = ManualChangesByScenarios(DataBase);
         [EmissionsByYearsCurrent, ConsumptionAmountsCurrent] = FullScenario(DataBase, ManualScenariosTable, Years);
-        EmissionsSumCurrent = EmissionsSumCalc(EmissionsByYearsCurrent,Years);
+        EmissionsSumCurrent = EmissionsSumCalcOnlyOneStep(EmissionsByYearsCurrent,Years);
         
     case 2 %% only one step
         for i = 1:ScenarioNumber
