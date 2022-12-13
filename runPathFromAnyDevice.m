@@ -1,0 +1,3 @@
+restoredefaultpath
+rehash toolboxcache
+savepath
