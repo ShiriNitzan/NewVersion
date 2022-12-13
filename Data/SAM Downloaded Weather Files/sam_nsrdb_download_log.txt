@@ -1,0 +1,272 @@
+NSRDB Download Thu Nov 25 11:55:46 2021
+==========================================================
+
+Requested location(s): [ Beer-Sheva ]
+
+Location 1 of 1: "Beer-Sheva"
+----------------------------------------------------------
+
+For geocoding: "Beer-Sheva" appears to be a street address or location name. (Locations entered as coordinates must be in Decimal Degrees separated by a comma.)
+
+URL for NSRDB Data Query: https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-data-query.json?&api_key=<SAMAPIKEY>&wkt=POINT(34.790691%2031.252547)
+
+No TMY file available for "Beer-Sheva". (Avalable datasets: [ msg-iodc ])
+
+Try the Advanced Download option or see https://sam.nrel.gov/weather for other sources of data.
+
+
+NSRDB Download Thu Nov 25 12:02:41 2021
+==========================================================
+
+Requested location(s): [ 31.25181 34.7913 ]
+
+Location 1 of 1: "31.25181 34.7913"
+----------------------------------------------------------
+
+For geocoding: "31.25181 34.7913" appears to be a valid lat/lon pair in Decimal Degrees.
+
+URL for NSRDB Data Query: https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-data-query.json?&api_key=<SAMAPIKEY>&wkt=POINT(34.791295%2031.251812)
+
+No TMY file available for "31.25181,34.7913". (Avalable datasets: [ msg-iodc ])
+
+Try the Advanced Download option or see https://sam.nrel.gov/weather for other sources of data.
+
+
+NSRDB Download Thu Nov 25 12:03:21 2021
+==========================================================
+
+Requested location(s): [ Type a location name, street address, or lat,lon in decimal degrees ]
+
+Location 1 of 1: "Type a location name, street address, or lat,lon in decimal degrees"
+----------------------------------------------------------
+
+Invalid location name: 
+
+Type a location name, street address, or lat,lon in decimal degrees
+
+Geocoding failed: Could not connect to service or failed to recognize "Type a location name, street address, or lat,lon in decimal degrees" 
+
+
+NSRDB Download Thu Nov 25 12:03:46 2021
+==========================================================
+
+Requested location(s): [ Israel ]
+
+Location 1 of 1: "Israel"
+----------------------------------------------------------
+
+For geocoding: "Israel" appears to be a street address or location name. (Locations entered as coordinates must be in Decimal Degrees separated by a comma.)
+
+URL for NSRDB Data Query: https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-data-query.json?&api_key=<SAMAPIKEY>&wkt=POINT(34.811615%2031.182882)
+
+No TMY file available for "Israel". (Avalable datasets: [ msg-iodc ])
+
+Try the Advanced Download option or see https://sam.nrel.gov/weather for other sources of data.
+
+
+NSRDB Download Thu Nov 25 12:04:37 2021
+==========================================================
+
+Requested location(s): [ Paris ]
+
+Location 1 of 1: "Paris"
+----------------------------------------------------------
+
+For geocoding: "Paris" appears to be a street address or location name. (Locations entered as coordinates must be in Decimal Degrees separated by a comma.)
+
+URL for NSRDB Data Query: https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-data-query.json?&api_key=<SAMAPIKEY>&wkt=POINT(2.352133%2048.856506)
+
+No TMY file available for "Paris". (Avalable datasets: [ msg-iodc ])
+
+Try the Advanced Download option or see https://sam.nrel.gov/weather for other sources of data.
+
+
+NSRDB Download Thu Nov 25 12:05:17 2021
+==========================================================
+
+Requested location(s): [ Beer Sheva ]
+
+Location 1 of 1: "Beer Sheva"
+----------------------------------------------------------
+
+Requested year(s): [ 2019 ]
+
+File 1 of 1: 2019
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/msg-iodc-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=60&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,relative_humidity,wind_direction,wind_speed,surface_albedo&names=2019&wkt=POINT(34.790691%2031.252547)
+
+Download time: 9.550000 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/beer_sheva_31.252547_34.790691_msg-iodc_60_2019.csv.
+
+NSRDB Download Thu Dec  2 09:14:13 2021
+==========================================================
+
+Requested location(s): [ Type a location name, street address, or lat,lon in decimal degrees ]
+
+Location 1 of 1: "Type a location name, street address, or lat,lon in decimal degrees"
+----------------------------------------------------------
+
+Invalid location name: 
+
+Type a location name, street address, or lat,lon in decimal degrees
+
+Geocoding failed: Could not connect to service or failed to recognize "Type a location name, street address, or lat,lon in decimal degrees" 
+
+
+NSRDB Download Thu Dec  2 09:14:24 2021
+==========================================================
+
+Requested location(s): [ Israel ]
+
+Location 1 of 1: "Israel"
+----------------------------------------------------------
+
+Requested year(s): [ 2019 ]
+
+File 1 of 1: 2019
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/msg-iodc-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=30&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,relative_humidity,wind_direction,wind_speed,surface_albedo&names=2019&wkt=POINT(34.811615%2031.182882)
+
+Download time: 8.548000 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/israel_31.182882_34.811615_msg-iodc_30_2019.csv.
+
+NSRDB Download Thu Dec  9 08:09:27 2021
+==========================================================
+
+Requested location(s): [ Israel ]
+
+Location 1 of 1: "Israel"
+----------------------------------------------------------
+
+Requested year(s): [ 2019 ]
+
+File 1 of 1: 2019
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/msg-iodc-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=60&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,relative_humidity,wind_direction,wind_speed,surface_albedo&names=2019&wkt=POINT(34.811615%2031.182882)
+
+Download time: 6.886000 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/israel_31.182882_34.811615_msg-iodc_60_2019.csv.
+
+NSRDB Download Thu Dec  9 08:10:26 2021
+==========================================================
+
+Requested location(s): [ Israel ]
+
+Location 1 of 1: "Israel"
+----------------------------------------------------------
+
+Requested year(s): [ 2018 ]
+
+File 1 of 1: 2018
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/msg-iodc-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=60&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,relative_humidity,wind_direction,wind_speed,surface_albedo&names=2018&wkt=POINT(34.811615%2031.182882)
+
+Download time: 7.475000 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/israel_31.182882_34.811615_msg-iodc_60_2018.csv.
+
+NSRDB Download Thu Dec  9 08:07:57 2021
+==========================================================
+
+Requested location(s): [ Israel ]
+
+Location 1 of 1: "Israel"
+----------------------------------------------------------
+
+NSRDB Download Thu Dec  9 08:08:11 2021
+==========================================================
+
+Requested location(s): [ Israel ]
+
+Location 1 of 1: "Israel"
+----------------------------------------------------------
+
+NSRDB Download Wed Dec 22 11:50:06 2021
+==========================================================
+
+Requested location(s): [ 2 anchor lane. Mystice, CT ]
+
+Location 1 of 1: "2 anchor lane. Mystice, CT"
+----------------------------------------------------------
+
+Requested year(s): [ tmy ]
+
+File 1 of 1: tmy
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/psm3-tmy-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=60&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,wind_direction,wind_speed,surface_albedo&names=tmy&wkt=POINT(-79.2067%2043.1955)
+
+Download time: 4.631 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/2_anchor_lane._mystice_ct_43.1955_-79.2067_psm3-tmy_60_tmy.csv.
+
+NSRDB Download Wed Dec 22 11:52:24 2021
+==========================================================
+
+Requested location(s): [ 41.32844, -71.96854 ]
+
+Location 1 of 1: "41.32844, -71.96854"
+----------------------------------------------------------
+
+Requested year(s): [ tmy ]
+
+File 1 of 1: tmy
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/psm3-tmy-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=60&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,wind_direction,wind_speed,surface_albedo&names=tmy&wkt=POINT(-71.9688%2041.3286)
+
+Download time: 3.842 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/41.32844_-71.96854_41.3286_-71.9688_psm3-tmy_60_tmy.csv.
+
+NSRDB Download Thu Dec 30 14:31:23 2021
+==========================================================
+
+Requested location(s): [ 31.4061, 34.8516 ]
+
+Location 1 of 1: "31.4061, 34.8516"
+----------------------------------------------------------
+
+For geocoding: "31.4061, 34.8516" appears to be a valid lat/lon pair in Decimal Degrees.
+
+URL for NSRDB Data Query: https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-data-query.json?&api_key=<SAMAPIKEY>&email=<USEREMAIL>&wkt=POINT(34.8477%2031.4046)
+
+No TMY file available for "31.4061, 34.8516". (Avalable datasets: [ msg-iodc ])
+
+Try the Advanced Download option or see https://sam.nrel.gov/weather for other sources of data.
+
+
+NSRDB Download Thu Dec 30 14:30:32 2021
+==========================================================
+
+Requested location(s): [ israel ]
+
+Location 1 of 1: "israel"
+----------------------------------------------------------
+
+NSRDB Download Sun Feb  6 11:12:05 2022
+==========================================================
+
+Requested location(s): [ Omer, Israel ]
+
+Location 1 of 1: "Omer, Israel"
+----------------------------------------------------------
+
+Requested year(s): [ 2019 ]
+
+File 1 of 1: 2019
+----------------------------------------------------------
+
+https://developer.nrel.gov/api/nsrdb/v2/solar/msg-iodc-download.csv?api_key=<SAMAPIKEY>&full_name=sam_user&email=<USEREMAIL>&affiliation=unknown&mailing_list=false&reason=SAM&interval=60&utc=false&leap_day=false&attributes=dni,dhi,ghi,dew_point,air_temperature,surface_pressure,relative_humidity,wind_direction,wind_speed,surface_albedo&names=2019&wkt=POINT(34.8476%2031.2659)
+
+Download time: 5.899 seconds.
+
+Weather file test passed: C:/Users/jvjos/SAM Downloaded Weather Files/omer_israel_31.2659_34.8476_msg-iodc_60_2019.csv.
+

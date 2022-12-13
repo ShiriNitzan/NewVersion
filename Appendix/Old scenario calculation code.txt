@@ -1,0 +1,11 @@
+    StartYear = 2019;
+    EndYear = 2030;
+    Period = EndYear-StartYear+1;
+    AllButOneScenariosTable{1,1} = 1;
+    AllButOneScenariosTable{1,Years} = 1+S(1); %According to S2
+    FutureValue = AllButOneScenariosTable{1,Years};
+    Rate = nthroot(FutureValue/AllButOneScenariosTable{1, 1},Period-1);
+    AllButOneScenariosTable{1,1:(Years-Period)} = ones(1,(Years-Period));
+    for i = (Years-Period+1):Years
+        AllButOneScenariosTable{1, i} = AllButOneScenariosTable{1, 1}*((Rate)^(i-(Years-Period+1)));
+    end

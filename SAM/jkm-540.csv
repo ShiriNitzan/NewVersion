@@ -1,0 +1,21 @@
+6par_isc,13.87,Short circuit current (Isc)
+6par_is_bifacial,0,Use Bifacial Modules
+6par_transient_thermal_model_unit_mass,11.0919,Module unit mass
+6par_voc,49.49,Open circuit voltage (Voc)
+6par_aisc_display,0.048,Temperature coefficient of Isc
+6par_bifaciality,0.65,Bifaciality
+6par_aisc_units,1,aIsc Temp Coeff Units
+6par_gpmp,-0.35,Temperature coefficient of max. power point
+6par_area,2.57872,Module area
+6par_bifacial_ground_clearance_height,1,Ground clearance height
+6par_bifacial_transmission_factor,0.013,Transmission fraction
+6par_bvoc_display,-0.28,Temperature coefficient of Voc
+6par_bvoc_units,1,bVoc Temp Coeff Units
+6par_celltech,0,Cell type
+6par_imp,13.2,Maximum power point current (Imp)
+6par_module_name,Generic polycrystalline silicon module,Module name
+6par_mounting,0,Approximate installation height
+6par_nser,144,Number of cells in series
+6par_standoff,6,Standoff height
+6par_tnoct,25,Nominal operating cell temperature
+6par_vmp,40.91,Maximum power point voltage (Vmp)
