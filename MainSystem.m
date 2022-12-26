@@ -8,13 +8,13 @@ index = choiceList;
 
 switch index
     
-    case 1 %% manual changes
+    case 1 %% Manual changes
     
         ManualScenariosTable = ManualChangesByScenarios(DataBase);
         [EmissionsByYearsCurrent, ConsumptionAmountsCurrent] = FullScenario(DataBase, ManualScenariosTable, Years);
         EmissionsSumCurrent = EmissionsSumCalcOnlyOneStep(EmissionsByYearsCurrent,Years);
         
-    case 2 %% only one step
+    case 2 %% Only one step
         for i = 1:ScenarioNumber
             OnlyOneStepScenariosTable = AllButOneChangesByScenarios(DataBase, i, Years, ScenariosAndValues{:,7}, 'OnlyOne', true);
             [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, OnlyOneStepScenariosTable, Years);   
@@ -35,7 +35,7 @@ switch index
             OnlyOneAnalysis{i,9} = LocalAreaDiff;
         end
         
-    case 3 %% all steps but one
+    case 3 %% All steps but one
         AllButOneScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7});
         [EmissionsByYearsFull, ConsumptionAmountsFull, ResourcesFull, WaterFromFoodFull] = FullScenario(DataBase, AllButOneScenariosTable, Years);
         GlobalLocalEmissionsFull = CalcGlobalLocal(EmissionsByYearsFull);
@@ -59,7 +59,7 @@ switch index
             AllButOneAnalysis{i,9} = LocalAreaDiff;
         end
       
-    case 4 %% all the steps together
+    case 4 %% All the steps together
 
         [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7}, 'MileStones', true);
         [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1] = FullScenario(DataBase, FullScenariosTable1,Years);
@@ -69,26 +69,14 @@ switch index
 
         [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7}, 'MileStones', true);
         [EmissionsByYearsTest3, ConsumptionAmounts3, Resources3] = FullScenario(DataBase, FullScenariosTable3,Years);
-    case 5 %% renewable energies
-       
-    case 6 %% buisness as usual
+ 
+    case 5 %% Buisness as usual
         FullBAUScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4});
         [EmissionsByYearsBAU, ConsumptionAmountsBAU] = FullScenario(DataBase, FullBAUScenariosTable, Years);
         YearlyEmissionsBAU = YearlySumCalc(EmissionsByYearsBAU);
     
-    case 7 %% Sensitivity Analysis
-        ScenariosAndValues{6,5} = 1;
-        OtherScenarioTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,5});
-        [EmissionsByYearsOther, ConsumptionAmountsOther] = FullScenario(DataBase, OtherScenarioTable, Years);
-        YearlyEmissionsOther = YearlySumCalc(EmissionsByYearsOther);
-        
-        ScenariosAndValues{14,5} = 0;
-
-        OtherScenarioTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,5});
-        [EmissionsByYearsOtherNoElectric, ConsumptionAmountsOtherNoElectric] = FullScenario(DataBase, OtherScenarioTable, Years);
-        YearlyEmissionsOtherNoElectric = YearlySumCalc(EmissionsByYearsOther);
-
-    case 8
+    
+    case 6 %% SensitivityAnalysis
         SensitivityAnalysisCell = cell(1, 3*3);
         l = 1;
         for i = 1:3
