@@ -4,7 +4,10 @@ createPath;
 preparation;
 %% Read Changes By Scenarios
 
-index = choiceList; 
+scenarioHeadline = 'Select a scenario';
+scenarioInstructions = 'Choose one of the scenarios and follow the instructions.' ;
+scenarioList = {'Manual Input','Only One Step','All But One','All the steps together','Business as Usual', 'Sensitivity Analysis'};
+index = choiceList(scenarioHeadline,scenarioInstructions,scenarioList); 
 
 switch index
     

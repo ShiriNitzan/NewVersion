@@ -22,7 +22,11 @@ ValidationUpDownStream = CalcUpDownStream(EmissionsByYearsTest);
 ValidationEmissionsBySectors = TotalEmissionsBySectors(EmissionsByYearsTest);
 
 
-
-
+function [a] = choiceList()
+list = {'Manual Input','Only One Step','All But One',...                   
+'All the steps together','Business as Usual', 'Sensitivity Analysis'};
+a = listdlg('PromptString',{'Choose one of the scenarios and follow the instructions.',''},...
+    'Name','Select a scenario',...
+    'SelectionMode','single','ListString',list);
 
 

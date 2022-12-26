@@ -25,11 +25,14 @@ if(ScenarioNumber == 0)
     scenarioHeadline = 'Select a scenario';
 scenarioInstructions = 'Choose one of the scenarios and follow the instructions.' ;
 scenarioList = {'Population Growth','Electricity Per Capita','Desalinated Water','Beef Consumption','Food Loss', 'All'};
+index = choiceList(scenarioHeadline,scenarioInstructions,scenarioList); 
 
-ChooseSteps = choiceList(scenarioHeadline,scenarioInstructions,scenarioList); 
-    if(ChooseSteps==6)
+    prompt = "1. Population Growth"+ newline + "2. Electricity Per Capita" + newline + "3. Desalinated Water" + newline + "4. Beef Consumption" + newline +"5. Food Loss";
+    ChooseSteps = choiceList(scenarioHeadline,scenarioInstructions,scenarioList); 
+    if(strcmp(ChooseSteps{1}, 'All'))
         ChooseSteps = 1:1:length(S);
     else
+        ChooseSteps = str2num(ChooseSteps{1});
         if(ChooseSteps(1) < 0)
             Delete = ChooseSteps(1);
             ChooseSteps = 1:1:length(S);
