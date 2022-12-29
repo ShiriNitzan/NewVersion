@@ -1,5 +1,7 @@
-function [a] = choiceList(headline,instraction,listOfChoice)
+function [numberOfChoice] = choiceList(headline,instraction,listOfChoice)
+beep;
 list = listOfChoice;
-a = listdlg('PromptString',{instraction,''},...
+numberOfChoice = listdlg('PromptString',{instraction,''},...
     'Name',headline,...
     'SelectionMode','single','ListString',list);
+

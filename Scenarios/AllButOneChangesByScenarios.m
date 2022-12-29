@@ -22,11 +22,7 @@ AllButOneScenariosTable.Properties.VariableNames = ColumnNames;
 
 %% choose measures
 if(ScenarioNumber == 0)
-    scenarioHeadline = 'Select a scenario';
-scenarioInstructions = 'Choose one of the scenarios and follow the instructions.' ;
-scenarioList = {'Population Growth','Electricity Per Capita','Desalinated Water','Beef Consumption','Food Loss', 'All'};
-
-ChooseSteps = choiceList(scenarioHeadline,scenarioInstructions,scenarioList); 
+ChooseSteps = choiceList('Select a scenario','Choose one of the scenarios and follow the instructions.', {'Population Growth','Electricity Per Capita','Desalinated Water','Beef Consumption','Food Loss', 'All'}); 
     if(ChooseSteps==6)
         ChooseSteps = 1:1:length(S);
     else
@@ -340,16 +336,16 @@ end
 end
 
 function GrowthVector = LinearCalc(StartYear, EndYear, EndYearVal,StartYearVal)
-Period = EndYear-StartYear+1;
-GrowthVector = ones(1, Period);
-GrowthVector(1) = 1 + StartYearVal;
-GrowthVector(Period) = 1+EndYearVal;
-if(EndYearVal > StartYearVal)
-    Rate = (EndYearVal-StartYearVal)/(Period-1);
-else
-    Rate = -1*(StartYearVal-EndYearVal)/Period;
-end
-for i = 1:Period
-    GrowthVector(i) = GrowthVector(1)+Rate*(i-1);
-end
+    Period = EndYear-StartYear+1;
+    GrowthVector = ones(1, Period);
+    GrowthVector(1) = 1 + StartYearVal;
+    GrowthVector(Period) = 1+EndYearVal;
+    if(EndYearVal > StartYearVal)
+        Rate = (EndYearVal-StartYearVal)/(Period-1);
+    else
+        Rate = -1*(StartYearVal-EndYearVal)/Period;
+    end
+    for i = 1:Period
+        GrowthVector(i) = GrowthVector(1)+Rate*(i-1);
+    end
 end

@@ -16,3 +16,5 @@ OnlyOneAnalysis.Properties.VariableNames = {'Emissions', 'Emissions - Global', '
 PopulationGrowth = {0, 0.45, 0.9};
 ElectricityPerCapita = {0, 0.2, 0.41};
 DesalinatedWater = {0,1.32,2.64};
+
+beep;
