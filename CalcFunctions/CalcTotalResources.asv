@@ -39,8 +39,8 @@ function [Area, Costs, Water] = CalcTotalResources(Resources, ConsumptionAmounts
         Costs{4,i} = sum(PVAreaCost(1:i));
     end
     for i = 1:width(Water)
-     %%Water{1:5,i} = ((ConsumptionAmounts.(i){1,1}{7,1:5}))';
-         Water{1:5,i} = ((ConsumptionAmounts.(i){1,1}{7,:}))';
+       %%Water{1:5,i} = ((ConsumptionAmounts.(i){1,1}{7,1:5}));
+        Water{1:5,i} = ((ConsumptionAmounts.(i){1,1}{7,:}))';
     end    
     Area{4,:} = AreaConstruction;
     for i = 1:width(Area)

@@ -49,7 +49,8 @@ Initialization = WaterConsumptionCell{1}{:,1:5};
 
 for i =1:Years   
     CurrentConsumption = array2table(zeros(6,5), 'RowNames', RowNames);
-    CurrentConsumption{:,1} = Initialization(:,1)*(PrecentegeByTheYears(i)); %% from nature
+  %%CurrentConsumption{:,1} = Initialization(:,1)*1; %% from nature
+ CurrentConsumption{:,1} = Initialization(:,1)*(PrecentegeByTheYears(i)); %% from nature
     CurrentConsumption{:,2} = Initialization(:,2); %% deslinated - only from scenario
     CurrentConsumption{:,3} = Initialization(:,3)*(PrecentegeByTheYears(i)); %% all but desalinated
     CurrentConsumption{:,4} = Initialization(:,4)*(PrecentegeByTheYears(i)); %% all but desalinated

@@ -1,159 +1,4 @@
-ScenariosNames = {'Population Growth', 'Electricity Saving Scenario', 'Increase in Diselinated Water', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Change In Energy Consumption From Renewable Energies', 'Electricity Production by Natural Gas','Electricity Saving', 'Waste Minimization','Recycle Waste', '11', '12', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving'};
-
-Co2eS3 = AllButOneAnalysis;
-
-Co2eS3 = sortrows(Co2eS3,'Difference in Base and Target Year' ,'descend');
-CO2EFor2014 = sum(EmissionsByYears{1,1}{1}{1,:}) + EmissionsByYears{2,1}{1}{7,9}+sum(EmissionsByYears{3,1}{1}{:,7})+sum(EmissionsByYears{4,1}{1}{:,16}) + sum(EmissionsByYears{5,1}{1}{:,12})  + sum(EmissionsByYears{6,1}{1}{:,7})+sum(EmissionsByYears{7,1}{1}{:,2})+EmissionsByYears{10,1}{1}{1,2};
-CO2EFor2014 = CO2EFor2014/1000000;
-Co2eS3('Electricity Saving', :) = [];
-Co2eS3('Waste Minimization', :) = [];
-Co2eS3('Recycle Waste', :) = [];
-Co2eS3('11', :) = [];
-Co2eS3('18', :) = [];
-Co2eS3('Transition to Electric Van', :) = [];
-Co2eS3('Water Saving', :) = [];
-%% 
-AllButOneBars = Co2eS3;
-AllButOneBars('Transition To Public Transportation', :) = [];
-AllButOneBars('Transition to Electric Truck', :) = [];
-AllButOneBars('Reducing Beef Consumption', :) = [];
-AllButOneBars('Transition to Electric Bus', :) = [];
-
-sums = zeros(1, height(Co2eS3));
-temp = 0;
-for i = 1:height(Co2eS3)
-    temp = temp + Co2eS3{i, 1};
-    sums(i) = temp;
-end
-
-percentages =  zeros(1, height(Co2eS3));
-percent = 0;
-temp = 0;
-for i = 1:height(Co2eS3)
-    percent = (Co2eS3{i,1}/CO2EFor2014)*100;
-    temp = temp + percent;
-    percentages(i) = temp;
-end    
-
-fig = figure;
-left_color = [0 0 0];
-right_color = [0 0 0];
-set(fig,'defaultAxesColorOrder',[left_color; right_color]);
-
-x = categorical(AllButOneBars.Properties.RowNames).';
-x = reordercats(x, AllButOneBars.Properties.RowNames);
-y = (AllButOneBars{:, 1}).';
-b = bar(x, y, 0.4, 'FaceColor', [0.8500, 0.3250, 0.0980]);
-title('Changes in CO2E Emissions - All But One Analysis',  'FontSize', 28);
-xlabel('Scenarios', 'FontSize', 20);
-ylabel('MtCO2Eq', 'FontSize', 20);
-a = get(gca,'XTickLabel');
-set(gca,'XTickLabel',a,'fontsize',16)
-
-% hold on
-% 
-% y2 = sums;
-% plot(x, y2, 'LineWidth', 4, 'Color', [0.123 0.104 0.238]);
-% 
-% yyaxis right
-% ylabel('Percents')
-% y3 = percentages;
-% plot(x, y3, 'LineWidth', 4, 'Color', [0.255 0.127 0.80])
-% 
-% 
-% legend('Emissions', 'Sum', 'Percentage')
-% hold off
-%%
-ScenariosNames = {'Population Growth', 'Growth in Per Capita Electricity Consumption', 'Diselinated Water Use Growth', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Electricity From Renewable Energies', 'Electricity From Natural Gas','Electricity Saving', 'Waste Minimization','Recycle Waste', '11', '12', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving'};
-
-Co2eS3 = OnlyOneAnalysis;
-
-Co2eS3 = sortrows(Co2eS3,'Difference in Base and Target Year' ,'descend');
-CO2EFor2014 = sum(EmissionsByYears{1,1}{1}{1,:}) + EmissionsByYears{2,1}{1}{7,9}+sum(EmissionsByYears{3,1}{1}{:,7})+sum(EmissionsByYears{4,1}{1}{:,16}) + sum(EmissionsByYears{5,1}{1}{:,12})  + sum(EmissionsByYears{6,1}{1}{:,7})+sum(EmissionsByYears{7,1}{1}{:,2})+EmissionsByYears{10,1}{1}{1,2};
-Co2eS3('Electricity Saving', :) = [];
-Co2eS3('Waste Minimization', :) = [];
-Co2eS3('Recycle Waste', :) = [];
-Co2eS3('11', :) = [];
-Co2eS3('18', :) = [];
-Co2eS3('Transition to Electric Van', :) = [];
-Co2eS3('Water Saving', :) = [];
-%%
-
-OnlyOneBars = Co2eS3;
-OnlyOneBars('Transition To Public Transportation', :) = [];
-OnlyOneBars('Transition to Electric Truck', :) = [];
-OnlyOneBars('Reducing Beef Consumption', :) = [];
-OnlyOneBars('Transition to Electric Bus', :) = [];
-sums = zeros(1, height(Co2eS3));
-temp = 0;
-for i = 1:height(Co2eS3)
-    temp = temp + Co2eS3{i, 1};
-    sums(i) = temp;
-end
-
-percentages =  zeros(1, height(Co2eS3));
-percent = 0;
-temp = 0;
-for i = 1:height(Co2eS3)
-    percent = (Co2eS3{i,1}/CO2EFor2014)*100;
-    temp = temp + percent;
-    percentages(i) = temp;
-end    
-
-fig = figure;
-left_color = [0 0 0];
-right_color = [0 0 0];
-set(fig,'defaultAxesColorOrder',[left_color; right_color]);
-
-x = categorical(OnlyOneBars.Properties.RowNames).';
-x = reordercats(x, OnlyOneBars.Properties.RowNames);
-y = (OnlyOneBars{:, 1}).';
-b = bar(x, y, 0.4, 'FaceColor', [0.8500, 0.3250, 0.0980]);
-title('Changes in CO2E Emissions - Only One Measure',  'FontSize', 28);
-xlabel('Scenarios', 'FontSize', 20);
-ylabel('MtCO2Eq', 'FontSize', 20);
-a = get(gca,'XTickLabel');
-set(gca,'XTickLabel',a,'fontsize',16)
-
-% hold on
-% 
-% y2 = sums;
-% plot(x, y2, 'LineWidth', 4, 'Color', [0.123 0.104 0.238]);
-% 
-% yyaxis right
-% ylabel('Percents')
-% y3 = percentages;
-% plot(x, y3, 'LineWidth', 4, 'Color', [0.255 0.127 0.80])
-% 
-% 
-% legend('Emissions', 'Sum', 'Percentage')
-% hold off
 %% emissions - all scenrios
-BAU = CalcUpDownStream(EmissionsByYearsTest1);
-BAU(8,:) = [];
-Scenario1 = CalcUpDownStream(EmissionsByYearsTest2);
-Scenario1(8,:) = [];
-Scenario2 = CalcUpDownStream(EmissionsByYearsTest3);
-Scenario2(8,:) = [];
-Order = {'Base Year','BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
-y = [BAU{1:7,1}, BAU{1:7,34}, Scenario1{1:7,34}, Scenario2{1:7,34}];
-y = y';
-x = categorical({'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
-x = reordercats(x, Order);
-b = bar(x, y, 'stacked');
-title('Emissions From Different Scenarios', 'FontSize', 28);
-xlabel('Scenarios', 'FontSize', 20);
-ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(BAU.Properties.RowNames(1:7)), 'FontSize',12,'Location','northwest')
-
-%% 
-[AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1);
-[AreaSum2, CostsSum2, WaterSum2] = CalcTotalResources(Resources2, ConsumptionAmounts2);
-[AreaSum3, CostsSum3, WaterSum3] = CalcTotalResources(Resources3, ConsumptionAmounts3);
-
-%% emissions - all scenrios
-t = tiledlayout(1,3);
-nexttile
 BAU = CalcUpDownStream(EmissionsByYearsTest1);
 BAU(8,:) = [];
 Scenario1 = CalcUpDownStream(EmissionsByYearsTest2);
@@ -166,11 +11,199 @@ y = y';
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
-ylim([0 250])
-title('Emissions From Different Scenarios', 'FontSize', 24);
+title('Emissions From Different Scenarios', 'FontSize', 28);
 xlabel('Scenarios', 'FontSize', 20);
 ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(BAU.Properties.RowNames(1:7)), 'FontSize',16,'Location','northeast')
+legend(flip(b), flip(BAU.Properties.RowNames(1:7)), 'FontSize',12,'Location','northwest')
+%% emissions - all scenrios try
+t = tiledlayout(1,3);
+
+BAU = CalcUpDownStream(EmissionsByYearsTest1);
+%%BAU(8,:) = [];
+%%Scenario1 = CalcUpDownStream(EmissionsByYearsTest2);
+%%Scenario1(11,:) = [];
+%%Scenario2 = CalcUpDownStream(EmissionsByYearsTest3);
+%%Senario2(11,:) = [];
+Order = {'Base Year'};%,'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
+y = [BAU{1:10,1}];%, BAU{1:7,34}, Scenario1{1:7,34}, Scenario2{1:7,34}];
+y = y';
+x = categorical({'Base Year'});%, 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
+x = reordercats(x, Order);
+b = bar(x, y, 'stacked');
+title('Emissions From Different Scenarios', 'FontSize', 28);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('MtCO2Eq', 'FontSize', 20);
+legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',12,'Location','northwest')
+precents = y(1,:)./sum(y(1,:));
+ytips = zeros(1, length(b));
+for i = 1:length(b)
+    ytips(i) = b(i).YEndPoints;
+end
+ytxt = round(y./repmat(sum(y,2),1,size(y,2))*100);
+ytxt = num2cell(ytxt);
+ytxt = cellfun(@(x) [sprintf('%0.0f',x), '%'], ytxt,'UniformOutput', false);
+xtips = zeros(1, length(b));
+for i = 1:length(b)
+    xtips(i) = b(i).XEndPoints;
+end
+text(xtips,ytips,ytxt,'HorizontalAlignment','left','VerticalAlignment','top', 'FontSize', 6);
+
+[AreaSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1);
+
+AreaSum1 = sortrows(AreaSum1,1,'descend');
+WaterSum1 = sortrows(WaterSum1,1,'descend');
+AreaSum1(1, :) = [];
+WaterSum1(1, :) = [];
+%nexttile
+%%Order = {'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'};
+Order = {'Base Year'};
+y = [AreaSum1{1:4,1}];
+%%y = [AreaSum1{1:4,1}, AreaSum1{1:4,14}, AreaSum2{1:4,14}, AreaSum3{1:4,14}];
+y = y';
+%%x = categorical({'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'});
+x = categorical({'Base Year'});
+x = reordercats(x, Order);
+b = bar(x, y, 'stacked');
+ylim([0 70000])
+title('Area From Different Scenarios', 'FontSize',12);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('Km^2', 'FontSize', 20);
+legend(flip(b), flip(AreaSum1.Properties.RowNames(1:4)), 'FontSize',16,'Location','north')
+Order = {'Base Year'};
+y = [WaterSum1{1:4,2}];
+y = y';
+x = categorical({'Base Year'});
+x = reordercats(x, Order);
+nexttile
+b = bar(x, y, 'stacked');
+ylim([0 7500]) 
+title('Water From Different Scenarios', 'FontSize', 12);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('Million M^3', 'FontSize', 20);
+legend(flip(b), flip(WaterSum1.Properties.RowNames(1:4)), 'FontSize',16,'Location','northwest')
+
+%% emissions-area-water-base year to end year - pre
+[AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1);
+[AreaSum2, CostsSum2, WaterSum2] = CalcTotalResources(Resources2, ConsumptionAmounts2);
+[AreaSum3, CostsSum3, WaterSum3] = CalcTotalResources(Resources3, ConsumptionAmounts3);
+
+%% emissions-area-water-base year only
+t = tiledlayout(1,3);
+nexttile
+BAU = CalcUpDownStream(EmissionsByYearsTest3);
+BAU(11,:) = [];
+
+Order = {'All Sectors'};
+y = [BAU{1:10,1}];
+y = y';
+x = categorical({'All Sectors'});
+x = reordercats(x, Order);
+b = bar(x, y, 'stacked');
+ylim([0 120])
+title('Emissions From Different Scenarios', 'FontSize', 12);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('MtCO2Eq', 'FontSize', 20);
+legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',16,'Location','northeast')
+
+
+% Define the data for the new row
+ for i = 1:width(WaterSum1)
+    newData{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
+ end
+% Add the new row using addvars
+
+
+% Create a new table with the new row
+newRow = table(newData{:}, 'VariableNames', WaterSum1.Properties.VariableNames);
+
+% Concatenate the new row to the existing table
+WaterSum1 = [WaterSum1; newRow];
+WaterSum1.Properties.RowNames{7} = 'Water for food - Global';
+
+AreaSum1 = sortrows(AreaSum1,1,'descend');
+WaterSum1 = sortrows(WaterSum1,1,'descend');
+AreaSum1(1, :) = [];
+WaterSum1(1, :) = [];
+
+nexttile
+Order = {'All Sectors'};
+y = [AreaSum1{1:4,1}];
+y = y';
+x = categorical({'All Sectors'});
+x = reordercats(x, Order);
+b = bar(x, y, 'stacked');
+ylim([0 35000])
+title('Area From Different Scenarios', 'FontSize',12);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('Km^2', 'FontSize', 20);
+legend(flip(b), flip(AreaSum1.Properties.RowNames(1:4)), 'FontSize',16,'Location','north')
+Order = {'All Sectors'};
+y = [WaterSum1{1:5,1}];
+y = y';
+x = categorical({'All Sectors'});
+x = reordercats(x, Order);
+nexttile
+b = bar(x, y, 'stacked');
+ylim([0 3000]) 
+title('Water From Different Scenarios', 'FontSize', 12);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('Million M^3', 'FontSize', 20);
+legend(flip(b), flip(WaterSum1.Properties.RowNames(1:5)), 'FontSize',16,'Location','northwest')
+%% emissions-area-water-base year to end year
+t = tiledlayout(1,3);
+nexttile
+BAU = CalcUpDownStream(EmissionsByYearsTest1);
+BAU(11,:) = [];
+Scenario1 = CalcUpDownStream(EmissionsByYearsTest2);
+Scenario1(11,:) = [];
+Scenario2 = CalcUpDownStream(EmissionsByYearsTest3);
+Scenario2(11,:) = [];
+Order = {'Base Year','BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
+%%Order = {'Base Year','BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'};
+y = [BAU{1:10,1}, BAU{1:10,34}, Scenario1{1:10,34}, Scenario2{1:10,34}];
+%%y = [BAU{1:7,1}, BAU{1:7,14}, Scenario1{1:7,14}, Scenario2{1:7,14}];
+y = y';
+%%x = categorical({'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'});
+x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
+x = reordercats(x, Order);
+b = bar(x, y, 'stacked');
+ylim([0 260])
+title('Emissions From Different Scenarios', 'FontSize', 12);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('MtCO2Eq', 'FontSize', 20);
+legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',16,'Location','northeast')
+
+
+% Define the data for the new row
+ for i = 1:width(WaterSum1)
+    newData1{1,i} = (EmissionsByYearsTest1{11,i}{1,1}{1,3}+ EmissionsByYearsTest1{11,i}{1,1}{1,4})/1000000;        newData1{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
+    newData2{1,i} = (EmissionsByYearsTest2{11,i}{1,1}{1,3}+ EmissionsByYearsTest2{11,i}{1,1}{1,4})/1000000;
+    newData3{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
+ end
+% Add the new row using addvars
+
+
+% Create a new table with the new row
+newRow1 = table(newData1{:}, 'VariableNames', WaterSum1.Properties.VariableNames);
+newRow2 = table(newData2{:}, 'VariableNames', WaterSum2.Properties.VariableNames);
+newRow3 = table(newData3{:}, 'VariableNames', WaterSum3.Properties.VariableNames);
+
+
+
+% Concatenate the new row to the existing table
+WaterSum1 = [WaterSum1; newRow];
+WaterSum1.Properties.RowNames{7} = 'Water for food - Global';
+WaterSum2 = [WaterSum2; newRow];
+WaterSum2.Properties.RowNames{7} = 'Water for food - Global';
+WaterSum3 = [WaterSum3; newRow];
+WaterSum3.Properties.RowNames{7} = 'Water for food - Global';
+
+% Display the updated table
+disp(WaterSum1);
+
+
+
+
 AreaSum1 = sortrows(AreaSum1,1,'descend');
 WaterSum1 = sortrows(WaterSum1,1,'descend');
 AreaSum1(1, :) = [];
@@ -184,29 +217,60 @@ WaterSum3 = sortrows(WaterSum3,1,'descend');
 AreaSum3(1, :) = [];
 WaterSum3(1, :) = [];
 nexttile
+
+
+%%Order = {'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'};
 Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
 y = [AreaSum1{1:4,1}, AreaSum1{1:4,34}, AreaSum2{1:4,34}, AreaSum3{1:4,34}];
+%%y = [AreaSum1{1:4,1}, AreaSum1{1:4,14}, AreaSum2{1:4,14}, AreaSum3{1:4,14}];
 y = y';
+%%x = categorical({'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'});
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
 ylim([0 70000])
-title('Area From Different Scenarios', 'FontSize', 24);
+title('Area From Different Scenarios', 'FontSize',12);
 xlabel('Scenarios', 'FontSize', 20);
 ylabel('Km^2', 'FontSize', 20);
 legend(flip(b), flip(AreaSum3.Properties.RowNames(1:4)), 'FontSize',16,'Location','north')
 Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
-y = [WaterSum1{1:4,1}, WaterSum1{1:4,34}, WaterSum2{1:4,34}, WaterSum3{1:4,34}];
+%%Order = {'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'};
+%%y = [WaterSum1{1:4,1}, WaterSum1{1:4,14}, WaterSum2{1:4,14}, WaterSum3{1:4,14}];
+y = [WaterSum1{1:5,1}, WaterSum1{1:5,34}, WaterSum2{1:5,34}, WaterSum3{1:5,34}];
 y = y';
+%%x = categorical({'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'});
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 nexttile
 b = bar(x, y, 'stacked');
-ylim([0 7000]) 
-title('Water From Different Scenarios', 'FontSize', 24);
+ylim([0 7500]) 
+title('Water From Different Scenarios', 'FontSize', 12);
 xlabel('Scenarios', 'FontSize', 20);
 ylabel('Million M^3', 'FontSize', 20);
-legend(flip(b), flip(WaterSum3.Properties.RowNames(1:4)), 'FontSize',16,'Location','northwest')
+legend(flip(b), flip(WaterSum3.Properties.RowNames(1:5)), 'FontSize',16,'Location','northwest')
+%%
+Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
+BY = [WaterSum1{1,1}*0.51, WaterSum1{2,1}*3.50, WaterSum1{4,1}*0.50];
+BAU = [WaterSum1{1,34}*0.51, WaterSum1{2,34}*3.50, WaterSum1{4,34}*0.50];
+MOD = [WaterSum2{1,34}*0.51, WaterSum2{2,34}*3.50, WaterSum2{4,34}*0.50];
+ADV = [WaterSum3{1,34}*0.51, WaterSum3{2,34}*3.50, WaterSum3{4,34}*0.50];
+y = [BY,BAU,MOD,ADV];
+%y = [WaterSum1{1:4,1}, WaterSum1{1:4,34}, WaterSum2{1:4,34}, WaterSum3{1:4,34}];
+
+%y = y';
+x = categorical({'Base Year'});
+z = categorical({'BAU - 2050'});
+%x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
+%x = reordercats(x, Order);
+nexttile
+b = bar(x, BY ,'stacked');
+c = bar(z, BAU ,'stacked');
+ylim([0 15000]) 
+title('KWH of Water From Different Scenarios', 'FontSize', 24);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('KWH', 'FontSize', 20);
+%legend(flip(b), flip(WaterSum1.Properties.RowNames(1:4)), 'FontSize',16,'Location','northwest')
+
 %%
 MileStonesResults = zeros(3,Years);
 
@@ -335,26 +399,98 @@ for i = 1:length(b)
 end
 text(xtips,ytips,ytxt,'HorizontalAlignment','left','VerticalAlignment','top', 'FontSize', 14);
 
-%% Discussion
+%% Discussion - emissions
 BySectors = cell(1,10);
 for i = 2:10
-    BySectors{i} = CalcUpDownStream(SensitivityAnalysisCell{i-1});
-    BySectors{i}(8,:) = [];
+    BySectors{i} = CalcUpDownStream(SensitivityAnalysisCell{1,i-1});
+    BySectors{i}(12,:) = [];
 end    
 
+Order = {'Base Year','Pop 0% Elec 0%', 'Pop 0% Elec 20%', 'Pop 0% Elec 41%','Pop 45% Elec 0%','Pop 45% Elec 20%','Pop 45% Elec 41%','Pop 90% Elec 0%','Pop 90% Elec 20%','Pop 90% Elec 41%'};
+h = categorical({'Base\nYear','1\nPop 0%\nElec 0%', '2\n', '3\n','4\n','5\n','6\n','7\n','8\n','9\n'});
+%h = reordercats(h, Order);
+
 x = categorical(0:1:9);
-y = zeros(7,10);
+y = zeros(11,10);
 for i = 2:10
-    y(:,i) = BySectors{i}{1:7,Years};
+    y(:,i) = BySectors{1,i}{1:11,Years};
 end
 
-y(:, 1) = BySectors{2}{1:7,1};
+y(:, 1) = BySectors{2}{1:11,1};
+
+
+%yael methood
+t = zeros (10,10);
+for i  =2:10
+t(i,:)=sum(y(1:i,:));
+end
+
+t(1,:)=y(1,:);
+for i = 10:-1:1
+    bar(t(i,:),'stacked');
+    hold on
+end
+legend( flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','northwest')
+title('Emissions By Sectors - 2050',  'FontSize', 28);
+ylabel('MtCO2Eq', 'FontSize', 20);
+xticklabels(Order);
+xtickangle(45);
+xlabel('State', 'FontSize', 20);
+1%%
+%yael methood
+t = zeros (10,10);
+for i  =2:10
+t(i,:)=sum(y(1:i,:));
+end
+
+t(1,:)=y(1,:);
+for i = 10:-1:1
+    bar(t(i,:),'stacked');
+    hold on
+end
+legend(flip(h), flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','northwest')
+title('Emissions By Sectors - 2050',  'FontSize', 28);
+ylabel('MtCO2Eq', 'FontSize', 20);
+xlabel('State', 'FontSize', 20);
+%%
 
 b = bar(x,y,'stacked');
 title('Emissions By Sectors - 2050',  'FontSize', 28);
 ylabel('MtCO2Eq', 'FontSize', 20);
 xlabel('State', 'FontSize', 20);
-legend(flip(b), flip(BySectors{2}.Properties.RowNames(1:7,1)), 'FontSize',12,'Location','northwest')
-%% 
+legend(flip(b), flip(BySectors{3}.Properties.RowNames(1:11,1)), 'FontSize',12,'Location','northwest')
 
-temp = CalcGlobalLocal(EmissionsByYears);
+%% Discussion - Area
+BySectorsWater = cell(1,10);
+BySectorsArea = cell(1,10);
+for i = 2:10
+    [BySectorsArea{i}, CostsSum1, BySectorsWater{i}] = CalcTotalResources(SensitivityAnalysisCell{3,i-1}, SensitivityAnalysisCell{2,i-1});
+end    
+
+x = categorical(0:1:9);
+y = zeros(4,10);
+for i = 2:10
+    y(:,i) = BySectorsWater{i}{1:4,Years};
+end
+
+y(:, 1) = BySectorsWater{2}{1:4,1};
+
+b = bar(x,y,'stacked');
+title('Water By Sectors - 2050',  'FontSize', 28);
+ylabel('Million M^3', 'FontSize', 20);
+xlabel('State', 'FontSize', 20);
+legend(flip(b), flip(BySectorsWater{2}.Properties.RowNames(1:4,1)), 'FontSize',12,'Location','northwest')
+%%
+x = categorical(0:1:9);
+y = zeros(4,10);
+for i = 2:10
+    y(:,i) = BySectorsArea{i}{1:4,Years};
+end
+
+y(:, 1) = BySectorsArea{2}{1:4,1};
+
+b = bar(x,y,'stacked');
+title('Area By Sectors - 2050',  'FontSize', 28);
+ylabel('KM^2', 'FontSize', 20);
+xlabel('State', 'FontSize', 20);
+legend(flip(b), flip(BySectorsArea{2}.Properties.RowNames(1:4,1)), 'FontSize',12,'Location','northwest')

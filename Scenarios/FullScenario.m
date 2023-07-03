@@ -23,7 +23,7 @@ WaterSaving = ScenariosTable{19,:};
 
 %% Preparations - scenario 1`
 
-EmissionsByYears = cell(10,Years);
+EmissionsByYears = cell(11,Years);
 ConsumptionAmounts = cell(4,Years);
 addpath("CalcFunctions");
 ConsumptionChangesTable = PopulationGrowthPercentage;
@@ -60,8 +60,14 @@ end
 
 WaterForFoodPercentages = Data.WaterForFoodPercentages;
 for i=1:Years
-    WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:4});
+    WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:2});
+    %%WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:4});probebly mistake that sum alsom global water to local water 
     WaterConsumptionCell{i}{1,1:5} = WaterFromAgriculture;
+  %%WaterConsumptionCell{i}{1,2:5} = WaterFromAgriculture(1,2:5);
+end
+
+for i=1:Years
+    EmissionsByYears{11,i} = WaterFromFoodCell{i} ;
 end
 
 for i = 1:Years
@@ -241,7 +247,7 @@ ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 for i=1:Years
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};
-    TotalElectricityFromWater = CurrentElectricityFromWater{6,2};
+    TotalElectricityFromWater = CurrentElectricityFromWater{6,1};
     CurrentYearElectricity(6) = TotalElectricityFromWater*Data.ElectricityLossRatio;
     ElectricityConsumptionTable{6,i} = CurrentYearElectricity(6);
     [EmissionsByYears{2,i}, ElectricityBySources{1:6,i}] = CalcElectricityConsumption(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i},WasteInciniration(i));
@@ -339,7 +345,7 @@ for i = 2:Years
 end
 %% Create Final Table
 
-RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment'};
+RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment', 'Water from food'};
 EmissionsByYears = cell2table(EmissionsByYears, 'RowNames', RowNames);
 EmissionsByYears.Properties.VariableNames = YearsStringsForColNames;
 

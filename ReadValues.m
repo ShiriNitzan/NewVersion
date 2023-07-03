@@ -58,16 +58,26 @@ DataBase.WaterConsumptionCell{1} = array2table(zeros(6,5), 'RowNames', RowNames)
 DataBase.WaterConsumptionCell{1}{:,3:5} = table2array(readtable(Data,'Sheet','Water','Range','F12:H17','ReadVariableNames',false));
 DataBase.DrinkingWater = table2array(readtable(Data,'Sheet','Water','Range','E12:E17','ReadVariableNames',false));
 DiselinatedWaterPercntage = readtable(Data,'Sheet','Water','Range','N44:N44','ReadVariableNames',false);
+DataBase.DiselinatedWaterPercntage = DiselinatedWaterPercntage{1,1};
 DiselinatedWaterPercntage = DiselinatedWaterPercntage{1,1};
 DataBase.WaterConsumptionCell{1}{:,1} = DataBase.DrinkingWater*(1-DiselinatedWaterPercntage);
 DataBase.WaterConsumptionCell{1}{:,2} = DataBase.DrinkingWater*DiselinatedWaterPercntage;
-DataBase.WaterConsumptionCell{1}{6,1} = DataBase.WaterConsumptionCell{1}{5,1}+DataBase.WaterConsumptionCell{1}{5,2};
+DataBase.WaterConsumptionCell{1}{5,1} = DataBase.WaterConsumptionCell{1}{5,1}+DataBase.WaterConsumptionCell{1}{5,2};
 DataBase.WaterConsumptionCell{1}{5,2} = 0;
 ColNames = {'Water From Nature', 'Diselinated Water','Brackish Water','Treated WasteWater','Flood Water'};
 DataBase.WaterConsumptionCell{1}.Properties.VariableNames = ColNames;
 
 DataBase.SewegeTreatmentEmissionsCoefficitns = readtable(Data,'Sheet','Water','Range','B42:C42','ReadVariableNames',false);
 DataBase.SewegeTreatmentEmissionsCoefficitns.Properties.VariableNames = {'Air Pollutants (KG\Ton)', 'GHG (KG\Ton)'};
+
+LossRatio = readtable(Data,'Sheet','Water','Range','J33:J33','ReadVariableNames',false);
+DataBase.LossRatio = LossRatio{1,1};
+%% Electricity Consumption For Water	
+DataBase.ElectricityConsumptionForWaterCell = cell(1,1);
+RowNames = {'Natural Water', 'Urban Consumption','Diselinated Water','Treated Waste Water', 'Sewege'};
+DataBase.ElectricityConsumptionForWaterCell{1} = array2table(zeros(5,1), 'RowNames', RowNames);
+DataBase.ElectricityConsumptionForWaterCell{1}{:,1} = table2array(readtable(Data,'Sheet','Water','Range','I33:I37','ReadVariableNames',false));
+								
 
 %% construction
 RowNames = {'Agriculture', 'Other Public Buildings', 'Helathcare', 'Education', 'Industry and Storage', 'Transportation and Communications', 'Trade', 'Offices', 'Hosting', 'Residential', 'Total'};

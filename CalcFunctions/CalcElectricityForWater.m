@@ -1,43 +1,43 @@
 function ElectricityForWaterConsumption = CalcElectricityForWater(Data, WaterConsumption, ElectricityConsumptionCoefficients)
- %% 
- 
-UrbanConsumptionPercentages = Data.UrbanConsumptionPercentages;
-RatioForBrackishWater = Data.RatioForBrackishWater;
-%% Sewege
+ %% Urban
+ UrbanConsumptionPercentages = Data.UrbanConsumptionPercentages;
+ RatioForBrackishWater = Data.RatioForBrackishWater;
 
-UrbanConsumption_FreshWater = sum(WaterConsumption{3,1:2}); %% inculding diselinated water and brackish water
-UrbanConsumption = sum(WaterConsumption{3,1:4});
-Contruction = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(6);
-Gardening = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(4) + WaterConsumption{3,3}*RatioForBrackishWater(1);
-Residential = (UrbanConsumption_FreshWater)*UrbanConsumptionPercentages(1);
+ UrbanConsumption_FreshWater = sum(WaterConsumption{3,1:2}); %% inculding diselinated water
+ UrbanConsumption = sum(WaterConsumption{3,1:4});
+ Contruction = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(6);
+ Gardening = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(4) + WaterConsumption{3,3}*RatioForBrackishWater(1);
+ Residential = (UrbanConsumption_FreshWater)*UrbanConsumptionPercentages(1);
 
-TotalSewege = UrbanConsumption-Contruction-Gardening-0.15*Residential;
+ UrbanNoConstruction = UrbanConsumption - Contruction;
+ %% From Nature
+ FromNature = sum(WaterConsumption{:,1});
+ DesalinatedWater = sum(WaterConsumption{:,2});
 
-%% 
+ %% Treated Waste Water
+ TreatedWasteWater = sum(WaterConsumption{:,4});
 
-WaterFromNature = WaterConsumption{height(WaterConsumption),1}+WaterConsumption{height(WaterConsumption),3}+WaterConsumption{height(WaterConsumption),5};
-DiselinatedWater = WaterConsumption{height(WaterConsumption),2};
-TotalUrbanConsumption = UrbanConsumption-Contruction;
-TreatedWasteWater = WaterConsumption{height(WaterConsumption),4};
+ %% Electricity consumption
+ UrbanElectricity = UrbanNoConstruction*ElectricityConsumptionCoefficients(3);
+ FromNatureElectrcity = FromNature*(ElectricityConsumptionCoefficients(2) + ElectricityConsumptionCoefficients(6));
+ DesalinatedElectricity = DesalinatedWater*(ElectricityConsumptionCoefficients(1) + ElectricityConsumptionCoefficients(2));
+ TreatedWasteWaterElectricity = TreatedWasteWater*ElectricityConsumptionCoefficients(4);
 
-%% Electricity
+ TotalSewege = UrbanConsumption-Contruction-Gardening-0.15*Residential;
+ SewewgeElectricity = TotalSewege*ElectricityConsumptionCoefficients(5);
 
-RowNames = {'Water From Nature', 'Total Urban Consumption', 'Diselinated Water', 'Treated Waste Water', 'Sewege', 'Total'};
-TotalElectricityFromWater = array2table(zeros(6,2), 'RowNames', RowNames);
-TotalElectricityFromWater.Properties.VariableNames = {'Water Consumption', 'Total KWH'};
-TotalElectricityFromWater{1,1} = WaterFromNature;
-TotalElectricityFromWater{2,1} = TotalUrbanConsumption;
-TotalElectricityFromWater{3,1} = DiselinatedWater;
-TotalElectricityFromWater{4,1} = TreatedWasteWater;
-TotalElectricityFromWater{5,1} = TotalSewege;
+ %% Output
+ RowNames = {'Water From Nature', 'Total Urban Consumption', 'Diselinated Water', 'Treated Waste Water', 'Sewege', 'Total'};
+ ElectricityForWaterConsumption = array2table(zeros(6,1), 'RowNames', RowNames);
+ ElectricityForWaterConsumption.Properties.VariableNames = {'Total KWH'};
+ LossRatio = Data.LossRatio;
 
-TotalElectricityFromWater{1,2} = TotalElectricityFromWater{1,1}*(ElectricityConsumptionCoefficients(6)+ElectricityConsumptionCoefficients(2));
-TotalElectricityFromWater{2,2} = TotalElectricityFromWater{2,1}*(ElectricityConsumptionCoefficients(3));
-TotalElectricityFromWater{3,2} = TotalElectricityFromWater{3,1}*(ElectricityConsumptionCoefficients(1)) + TotalElectricityFromWater{3,1}*(ElectricityConsumptionCoefficients(2));
-TotalElectricityFromWater{4,2} = TotalElectricityFromWater{4,1}*(ElectricityConsumptionCoefficients(4));
-TotalElectricityFromWater{5,2} = TotalElectricityFromWater{5,1}*(ElectricityConsumptionCoefficients(5));
+ ElectricityForWaterConsumption{1,1} = FromNatureElectrcity*LossRatio;
+ ElectricityForWaterConsumption{2,1} = UrbanElectricity*LossRatio;
+ ElectricityForWaterConsumption{3,1} = DesalinatedElectricity*LossRatio;
+ ElectricityForWaterConsumption{4,1} = TreatedWasteWaterElectricity*LossRatio;
+ ElectricityForWaterConsumption{5,1} = SewewgeElectricity*LossRatio;
 
-TotalElectricityFromWater{6,2} = sum(TotalElectricityFromWater{1:5,2});
-ElectricityForWaterConsumption = TotalElectricityFromWater;
+ ElectricityForWaterConsumption{6,1} = sum(ElectricityForWaterConsumption{1:5,1});
 end
 
