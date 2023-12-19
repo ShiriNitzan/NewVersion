@@ -1,4 +1,4 @@
-function [ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WateAndRecyclingCell, AmountsOfFuelsCells, OrganicWasteAmount] = ConsumptionChanges(Data, PrecentegeByTheYears,Years, varargin)
+ function [ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WateAndRecyclingCell, AmountsOfFuelsCells, OrganicWasteAmount] = ConsumptionChanges(Data, PrecentegeByTheYears,Years,pop, varargin)
 %% Electricity Consumption
 p = inputParser;
 addOptional(p,'ChangesStruct', []);
@@ -41,25 +41,72 @@ for i = 1:Years
     CurrentConsumption.Properties.VariableNames = ColNames;
     FoodConsumptionCell{i} =  CurrentConsumption;
 end
-%% Water Consumption
-WaterConsumptionCell = Data.WaterConsumptionCell;
+%% Water model pre-data 
+waterData  = array2table(zeros(3,34));
+RowNames = {'Agriculture per capita', 'Water for nature', 'Drilling Water'};
+waterData.Properties.RowNames = RowNames;
+waterData(3,1) = {956}; % Drilling Water
+for i =1:34
+   waterData(1,i) = {-10.79*log(i+16)+167.91}; % Agriculture per capita
+   switch true % water for nature
+       case i<10
+          waterData(2,i) = {25};
+       case i>=10 & i<15
+          waterData(2,i) = {35};
+       case i>=15 & i<25
+          waterData(2,i) = {50};
+       case i>=25 & i<35
+          waterData(2,i) = {75};
+   end
+   if i>1    % Drilling Water
+       waterData(3,i) = {waterData{3,i-1}*0.9901};
+       if i==6 %A djustment to the water model data for 2022, until all the data in the software is updated
+            waterData(3,i) = {1080};
+       end
+   
+   end
 
-RowNames = {'Agriculture', 'Marginal Water Percentage', 'Home Consumption(Urban)', 'Industry', 'Water for Nature', 'Water for Neighbors'};
-Initialization = WaterConsumptionCell{1}{:,1:5};
-
-for i =1:Years   
-    CurrentConsumption = array2table(zeros(6,5), 'RowNames', RowNames);
-  %%CurrentConsumption{:,1} = Initialization(:,1)*1; %% from nature
- CurrentConsumption{:,1} = Initialization(:,1)*(PrecentegeByTheYears(i)); %% from nature
-    CurrentConsumption{:,2} = Initialization(:,2); %% deslinated - only from scenario
-    CurrentConsumption{:,3} = Initialization(:,3)*(PrecentegeByTheYears(i)); %% all but desalinated
-    CurrentConsumption{:,4} = Initialization(:,4)*(PrecentegeByTheYears(i)); %% all but desalinated
-    CurrentConsumption{:,5} = Initialization(:,5)*(PrecentegeByTheYears(i)); %% all but desalinated
-    ColNames = {'Water From Nature','Diselinated Water','Brackish Water','Treated WasteWater','Flood Water'};
-    CurrentConsumption.Properties.VariableNames = ColNames;
-    WaterConsumptionCell{i} =  CurrentConsumption;
 end
 
+%% Water Consumption
+WaterConsumptionCell = Data.WaterConsumptionCell;
+ColNames = {'Water for Domestic & Industrial', 'Water for Agriculture', 'Water for Neighbors', 'Water for  Nature', 'Drilling Water', 'Reclaimed Wastewater', 'Brackish water, fresh and non-fresh reservoir water', 'Desalinated Water'};
+Initialization = WaterConsumptionCell{1}{:,1:5};
+CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
+%%2017 Data
+CurrentConsumption{1,1} = 983;
+CurrentConsumption{1,2} = 1253;
+CurrentConsumption{1,3} = 137;
+CurrentConsumption{1,4} = 23;
+CurrentConsumption{1,5} = 940;
+CurrentConsumption{1,6} = 512;
+CurrentConsumption{1,7} = 400;
+CurrentConsumption{1,8} = 586;
+
+WaterConsumptionCell{1} =  CurrentConsumption;
+for i =2:Years 
+    CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
+    CurrentConsumption{1,1} = pop{3,i}*110.452; % Water for Domestic & Industrial
+    CurrentConsumption{1,2} = pop{3,i}*waterData{1,i}; % for agriculture
+    CurrentConsumption{1,3} = pop{4,i}*20.31282+90; % Water for Neighbors
+    CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
+    CurrentConsumption{1,5} = waterData{3,i}; %% natural from
+    CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
+    CurrentConsumption{1,7} = 400; %% Brackish water, fresh and non-fresh reservoir water
+    CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
+    if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
+        CurrentConsumption{1,1} = 1070;
+        CurrentConsumption{1,2} = 1300;
+        CurrentConsumption{1,3} = 190;
+        CurrentConsumption{1,4} = 25;
+        CurrentConsumption{1,5} = 1080;
+        CurrentConsumption{1,6} = 636;
+        CurrentConsumption{1,7} = 400;
+        CurrentConsumption{1,8} = 524;  
+    end
+   
+    WaterConsumptionCell{i} =  CurrentConsumption;
+end
 %% Construction
 
 ConstructionTable = Data.ConstructionTable;
@@ -106,7 +153,7 @@ for i =2:Years
     CurrentFuelConsumption{:,:} = AmountsOfFuelsCells{1}{:,:}*PrecentegeByTheYears(i);
     AmountsOfFuelsCells{i} = CurrentFuelConsumption;
 end    
-end
+
 
 %%
 function PercentVector = CalcChangeVector(MileStoneVector, Years, S, varargin)
@@ -257,4 +304,4 @@ end
 %     end
 % end
 
-
+end

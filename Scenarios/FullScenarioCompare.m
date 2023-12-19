@@ -1,4 +1,5 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop)
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioCalWater(Data,ScenariosTable,Years,pop,EmissionsByYearsTest1)
+%The difference between the second FULLSENARIO function is that here we make comparisons with the results we got earlier
 %% Cut Vectors from Scenarios Table
 
 PopulationGrowthPercentage = ScenariosTable{1,:};
@@ -54,18 +55,16 @@ for i=1:Years
     EmissionsFromFood = CalcCo2eFromFoodConsumption(Data, CurrentFoodConsumption, OrganicWasteCell{i});
     EmissionsByYears{1,i} = EmissionsFromFood;
     FoodConsumptionCell{i} = CurrentFoodConsumption;
-end
+
+    % Calculates the difference of the results obtained for reducing food use in B.A.U compared to the results obtained in this case (advanced/moderate)
+    BAUResult = EmissionsByYearsTest1{11,i}{1}; 
+    A =  sum(BAUResult{1,1:2})/10^6;
+    B =  sum(WaterFromFoodCell{i}{1,1:2})/10^6;
+    gap = A-B;
+    WaterConsumptionCell{i}{1,8} =  WaterConsumptionCell{i}{1,8} - gap ;
+ end 
 
 %% Water Emissions
-
-% WaterForFoodPercentages = Data.WaterForFoodPercentages;
- %   for i=1:Years
-    %    WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:2});
-        %%WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:4});probebly mistake that sum also global water to local water 
-  %      WaterConsumptionCell{i}{1,1:5} = WaterFromAgriculture;
-      %%WaterConsumptionCell{i}{1,2:5} = WaterFromAgriculture(1,2:5);
-  %  end
-
 for i=1:Years
     EmissionsByYears{11,i} = WaterFromFoodCell{i} ;
 end
@@ -75,15 +74,7 @@ for i = 1:Years
     EmissionsByYears{10,i} = EmmisionsFromSewegeTreatment;
 end
 
-%% { change in diselinated water consumption - scenario 3  - not useful
 
-%{
-for i =1:Years
-    DiselinatedWaterConsumption = WaterConsumptionCell{i}{:,2};
-    DiselinatedWaterConsumption = DiselinatedWaterConsumption*IncreaseInDiselinatedWater(i);
-    WaterConsumptionCell{i}{:,2} = DiselinatedWaterConsumption;
-end
-%}
 
 
 %% water saving - scenario 19

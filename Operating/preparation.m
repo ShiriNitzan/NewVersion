@@ -17,4 +17,18 @@ PopulationGrowth = {0, 0.45, 0.9};
 ElectricityPerCapita = {0, 0.2, 0.41};
 DesalinatedWater = {0,1.32,2.64};
 
+%% population data
+population  = array2table(zeros(4,34));
+RowNames = {'Num','Years', 'Israel population', 'Palestinian Authority population'};
+pop.Properties.RowNames = RowNames;
+
+for i =1:34
+    population(1,i) = {i};
+    population(2,i) = {i+2016};
+    population(3,i) = {8.8*1.0192^(i-1)};
+    population(4,i) = {4.455*1.0223^(i-1)};
+
+end
+
+%%
 beep;

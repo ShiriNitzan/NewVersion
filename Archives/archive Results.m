@@ -90,8 +90,39 @@ legend(flip(b), flip(WaterSum1.Properties.RowNames(1:4)), 'FontSize',16,'Locatio
 %% emissions-area-water-base year only
 t = tiledlayout(1,3);
 nexttile
-BAU = CalcUpDownStream(EmissionsByYearsTest3);
+BAU = CalcUpDownStream(EmissionsByYearsTest1);
 BAU(11,:) = [];
+
+colors1Em = [
+   0.72, 0.27, 1.0; 
+    0.49, 0.18, 0.56;  % Red
+    0.93, 0.69, 0.13;  % Green
+    0.51, 0.37, 0.01;  % Purple
+    0.29, 0.89, 0.69;  % Orange
+    0.47, 0.67, 0.19;  % Pink
+    0.85, 0.33, 0.1;  
+    0.64, 0.08, 0.18;  
+    0.3, 0.75, 0.93;  
+    0, 0.45, 0.74;
+];
+
+colors2Area = [
+    0.47, 0.67, 0.19;
+    0.29, 0.89, 0.69; 
+    0.85, 0.33, 0.1; 
+    0.72, 0.27, 1.0;
+];
+
+colors3Water = [
+    0.1, 0.31, 0.5;  
+    0, 0.45, 0.74;  
+    0.46, 0.72, 0.89;  
+   %0.63, 0.83, 0.92;  
+    0.92, 0.93, 0.93;  
+];
+
+
+
 
 Order = {'All Sectors'};
 y = [BAU{1:10,1}];
@@ -99,17 +130,23 @@ y = y';
 x = categorical({'All Sectors'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors1Em(i, :));
+end
+
+
 ylim([0 120])
-title('Emissions From Different Scenarios', 'FontSize', 12);
-xlabel('Scenarios', 'FontSize', 20);
+title('Emissions', 'FontSize', 14);
+%xlabel('Scenarios', 'FontSize', 20);
 ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',16,'Location','northeast')
+legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',8,'Location','northwest')
 
-
-% Define the data for the new row
- for i = 1:width(WaterSum1)
-    newData{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
- end
+%{
+%Define the data for the new row
+     for i = 1:width(WaterSum1)
+        newData{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
+     end
 % Add the new row using addvars
 
 
@@ -119,6 +156,11 @@ newRow = table(newData{:}, 'VariableNames', WaterSum1.Properties.VariableNames);
 % Concatenate the new row to the existing table
 WaterSum1 = [WaterSum1; newRow];
 WaterSum1.Properties.RowNames{7} = 'Water for food - Global';
+
+%}
+
+
+
 
 AreaSum1 = sortrows(AreaSum1,1,'descend');
 WaterSum1 = sortrows(WaterSum1,1,'descend');
@@ -132,30 +174,75 @@ y = y';
 x = categorical({'All Sectors'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
+
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors2Area(i, :));
+end
+
 ylim([0 35000])
-title('Area From Different Scenarios', 'FontSize',12);
-xlabel('Scenarios', 'FontSize', 20);
+title('Area', 'FontSize',14);
+%xlabel('Scenarios', 'FontSize', 20);
 ylabel('Km^2', 'FontSize', 20);
-legend(flip(b), flip(AreaSum1.Properties.RowNames(1:4)), 'FontSize',16,'Location','north')
+legend(flip(b), flip(AreaSum1.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
+
+
 Order = {'All Sectors'};
-y = [WaterSum1{1:5,1}];
+y = [WaterSum1{1:4,1}];
 y = y';
 x = categorical({'All Sectors'});
 x = reordercats(x, Order);
 nexttile
 b = bar(x, y, 'stacked');
-ylim([0 3000]) 
-title('Water From Different Scenarios', 'FontSize', 12);
-xlabel('Scenarios', 'FontSize', 20);
+
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors3Water(i, :));
+end
+
+
+ylim([0 3500]) 
+title('Water', 'FontSize', 14);
+%xlabel('Scenarios', 'FontSize', 20);
 ylabel('Million M^3', 'FontSize', 20);
-legend(flip(b), flip(WaterSum1.Properties.RowNames(1:5)), 'FontSize',16,'Location','northwest')
-%% emissions-area-water-base year to end year
+legend(flip(b), flip(WaterSum1.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
+%% emissions-area-water-base year to last year
+
+colors1Em = [
+   0.72, 0.27, 1.0; 
+    0.49, 0.18, 0.56;  % Red
+    0.93, 0.69, 0.13;  % Green
+    0.51, 0.37, 0.01;  % Purple
+    0.29, 0.89, 0.69;  % Orange
+    0.47, 0.67, 0.19;  % Pink
+    0.85, 0.33, 0.1;  
+    0.64, 0.08, 0.18;  
+    0.3, 0.75, 0.93;  
+    0, 0.45, 0.74;
+];
+
+colors2Area = [
+    0.47, 0.67, 0.19;
+    0.29, 0.89, 0.69; 
+    0.85, 0.33, 0.1; 
+    0.72, 0.27, 1.0;
+];
+
+colors3Water = [
+    0.1, 0.31, 0.5;  
+    0, 0.45, 0.74;  
+    0.46, 0.72, 0.89;  
+ %   0.63, 0.83, 0.92;  
+    0.92, 0.93, 0.93;  
+];
+
+
 t = tiledlayout(1,3);
 nexttile
 BAU = CalcUpDownStream(EmissionsByYearsTest1);
 BAU(11,:) = [];
 Scenario1 = CalcUpDownStream(EmissionsByYearsTest2);
-Scenario1(11,:) = [];
+ Scenario1(11,:) = [];
 Scenario2 = CalcUpDownStream(EmissionsByYearsTest3);
 Scenario2(11,:) = [];
 Order = {'Base Year','BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
@@ -167,11 +254,16 @@ y = y';
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors1Em(i, :));
+end
+
 ylim([0 260])
-title('Emissions From Different Scenarios', 'FontSize', 12);
+title('Emissions From Different Scenarios', 'FontSize', 14);
 xlabel('Scenarios', 'FontSize', 20);
 ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',16,'Location','northeast')
+legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',8,'Location','northwest')
 
 
 % Define the data for the new row
@@ -190,7 +282,9 @@ newRow3 = table(newData3{:}, 'VariableNames', WaterSum3.Properties.VariableNames
 
 
 
-% Concatenate the new row to the existing table
+%{
+Concatenate the new row to the existing table
+
 WaterSum1 = [WaterSum1; newRow];
 WaterSum1.Properties.RowNames{7} = 'Water for food - Global';
 WaterSum2 = [WaterSum2; newRow];
@@ -198,13 +292,17 @@ WaterSum2.Properties.RowNames{7} = 'Water for food - Global';
 WaterSum3 = [WaterSum3; newRow];
 WaterSum3.Properties.RowNames{7} = 'Water for food - Global';
 
+%}
+
+%disp(WaterSum1);
+
+
 % Display the updated table
-disp(WaterSum1);
 
 
 
 
-AreaSum1 = sortrows(AreaSum1,1,'descend');
+AreaSum1 = sortrows(AreaSum1,1,'descend'); 
 WaterSum1 = sortrows(WaterSum1,1,'descend');
 AreaSum1(1, :) = [];
 WaterSum1(1, :) = [];
@@ -228,26 +326,36 @@ y = y';
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors2Area(i, :));
+end
+
 ylim([0 70000])
-title('Area From Different Scenarios', 'FontSize',12);
+title('Area From Different Scenarios', 'FontSize',14);
 xlabel('Scenarios', 'FontSize', 20);
 ylabel('Km^2', 'FontSize', 20);
-legend(flip(b), flip(AreaSum3.Properties.RowNames(1:4)), 'FontSize',16,'Location','north')
+legend(flip(b), flip(AreaSum3.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
 Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
 %%Order = {'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'};
 %%y = [WaterSum1{1:4,1}, WaterSum1{1:4,14}, WaterSum2{1:4,14}, WaterSum3{1:4,14}];
-y = [WaterSum1{1:5,1}, WaterSum1{1:5,34}, WaterSum2{1:5,34}, WaterSum3{1:5,34}];
+y = [WaterSum1{1:4,1}, WaterSum1{1:4,34}, WaterSum2{1:4,34}, WaterSum3{1:4,34}];
 y = y';
 %%x = categorical({'Base Year', 'BAU - 2030', 'Moderate - 2030', 'Advanced - 2030'});
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 nexttile
 b = bar(x, y, 'stacked');
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors3Water(i, :));
+end
+
 ylim([0 7500]) 
-title('Water From Different Scenarios', 'FontSize', 12);
+title('Water From Different Scenarios', 'FontSize', 14);
 xlabel('Scenarios', 'FontSize', 20);
 ylabel('Million M^3', 'FontSize', 20);
-legend(flip(b), flip(WaterSum3.Properties.RowNames(1:5)), 'FontSize',16,'Location','northwest')
+legend(flip(b), flip(WaterSum3.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
 %%
 Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
 BY = [WaterSum1{1,1}*0.51, WaterSum1{2,1}*3.50, WaterSum1{4,1}*0.50];
@@ -400,13 +508,30 @@ end
 text(xtips,ytips,ytxt,'HorizontalAlignment','left','VerticalAlignment','top', 'FontSize', 14);
 
 %% Discussion - emissions
+
+colors1Em = [
+   
+   0.72, 0.27, 1.0; 
+    0.49, 0.18, 0.56;  % Red
+    0.93, 0.69, 0.13;  % Green
+    0.51, 0.37, 0.01;  % Purple
+    0.29, 0.89, 0.69;  % Orange
+    0.47, 0.67, 0.19;  % Pink
+    0.85, 0.33, 0.1;  
+    0.64, 0.08, 0.18;  
+    0.3, 0.75, 0.93;  
+    0, 0.45, 0.74;
+ 
+  
+];
+
 BySectors = cell(1,10);
 for i = 2:10
     BySectors{i} = CalcUpDownStream(SensitivityAnalysisCell{1,i-1});
     BySectors{i}(12,:) = [];
 end    
 
-Order = {'Base Year','Pop 0% Elec 0%', 'Pop 0% Elec 20%', 'Pop 0% Elec 41%','Pop 45% Elec 0%','Pop 45% Elec 20%','Pop 45% Elec 41%','Pop 90% Elec 0%','Pop 90% Elec 20%','Pop 90% Elec 41%'};
+Order = {'Base Year','Pop 0%\newlineElec 0%', 'Pop 0%\newlineElec 20%', 'Pop 0%\newlineElec 41%','Pop 45%\newlineElec 0%','Pop 45%\newlineElec 20%','Pop 45%\newlineElec 41%','Pop 90%\newlineElec 0%','Pop 90%\newlineElec 20%','Pop 90%\newlineElec 41%'};
 h = categorical({'Base\nYear','1\nPop 0%\nElec 0%', '2\n', '3\n','4\n','5\n','6\n','7\n','8\n','9\n'});
 %h = reordercats(h, Order);
 
@@ -418,25 +543,24 @@ end
 
 y(:, 1) = BySectors{2}{1:11,1};
 
+b = bar(x,y,'stacked');
 
-%yael methood
-t = zeros (10,10);
-for i  =2:10
-t(i,:)=sum(y(1:i,:));
+for i = 1:10
+    set(b(i), 'FaceColor', colors1Em(i, :));
 end
 
-t(1,:)=y(1,:);
-for i = 10:-1:1
-    bar(t(i,:),'stacked');
-    hold on
-end
-legend( flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','northwest')
+
+legend(flip(b(1:10)), flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','north')
+
+%legend( flip(BySectors{3}.Properties.RowNames(1:10)), 'FontSize',10,'Location','north');
+%legend( flip(b), 'FontSize',10,'Location','north')
+
 title('Emissions By Sectors - 2050',  'FontSize', 28);
 ylabel('MtCO2Eq', 'FontSize', 20);
 xticklabels(Order);
-xtickangle(45);
+xtickangle(0);
 xlabel('State', 'FontSize', 20);
-1%%
+%%
 %yael methood
 t = zeros (10,10);
 for i  =2:10
@@ -448,7 +572,7 @@ for i = 10:-1:1
     bar(t(i,:),'stacked');
     hold on
 end
-legend(flip(h), flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','northwest')
+legend(flip(h), flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','north')
 title('Emissions By Sectors - 2050',  'FontSize', 28);
 ylabel('MtCO2Eq', 'FontSize', 20);
 xlabel('State', 'FontSize', 20);

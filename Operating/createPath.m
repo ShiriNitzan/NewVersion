@@ -1,5 +1,6 @@
 addpath("Scenarios");
 addpath("CalcFunctions");
-addpath("UI");
+addpath("Archives");
 addpath("Data");
+addpath("Operating");
 Data = "Data.xlsx";

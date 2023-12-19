@@ -11,7 +11,7 @@
         UpDownStreamEmissions{7,i} = sum(EmissionsByYears{7,i}{1,1}{11:12,2})/1000000;
         UpDownStreamEmissions{8,i} = sum(EmissionsByYears{7,i}{1,1}{13,2})/1000000;
 
-        UpDownStreamEmissions{9,i} = (EmissionsByYears{10,i}{1,1}{1,2} + EmissionsByYears{2,i}{1,1}{6,9})/1000000;
+        UpDownStreamEmissions{9,i} = (EmissionsByYears{10,i}{1,1}{1,2} + EmissionsByYears{2,i}{1,1}{6,9});%/1000000;
         %%global water
         UpDownStreamEmissions{10,i} = ((EmissionsByYears{11,i}{1,1}{1,3} + EmissionsByYears{11,i}{1,1}{1,4})*(0.51+0.4)*(888.07+0.00944*28+0.1408*265))/(1000000*100000) ;%%The amount of global water, under the assumption that all of it is natural water, times the electricity production costs of natural water times the emissions they produce 
       

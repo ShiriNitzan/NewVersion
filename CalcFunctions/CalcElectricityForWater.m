@@ -3,19 +3,22 @@ function ElectricityForWaterConsumption = CalcElectricityForWater(Data, WaterCon
  UrbanConsumptionPercentages = Data.UrbanConsumptionPercentages;
  RatioForBrackishWater = Data.RatioForBrackishWater;
 
- UrbanConsumption_FreshWater = sum(WaterConsumption{3,1:2}); %% inculding diselinated water
- UrbanConsumption = sum(WaterConsumption{3,1:4});
+ UrbanConsumption_FreshWater = WaterConsumption{1,1}*0.89; %% inculding diselinated water
+ %UrbanConsumption_FreshWater = sum(WaterConsumption{3,1:2}); %% inculding diselinated water
+ UrbanConsumption = WaterConsumption{1,1};
  Contruction = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(6);
- Gardening = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(4) + WaterConsumption{3,3}*RatioForBrackishWater(1);
- Residential = (UrbanConsumption_FreshWater)*UrbanConsumptionPercentages(1);
+ Gardening = (WaterConsumption{1,1}*0.11)*UrbanConsumptionPercentages(4);
+ Residential =(WaterConsumption{1,1})*UrbanConsumptionPercentages(1);
+ %Gardening = UrbanConsumption_FreshWater*UrbanConsumptionPercentages(4) + WaterConsumption{3,3}*RatioForBrackishWater(1);
+ %Residential = (UrbanConsumption_FreshWater)*UrbanConsumptionPercentages(1);
 
  UrbanNoConstruction = UrbanConsumption - Contruction;
  %% From Nature
- FromNature = sum(WaterConsumption{:,1});
- DesalinatedWater = sum(WaterConsumption{:,2});
+ FromNature = WaterConsumption{1,5};
+ DesalinatedWater = WaterConsumption{1,8};
 
  %% Treated Waste Water
- TreatedWasteWater = sum(WaterConsumption{:,4});
+ TreatedWasteWater = WaterConsumption{1,6};
 
  %% Electricity consumption
  UrbanElectricity = UrbanNoConstruction*ElectricityConsumptionCoefficients(3);

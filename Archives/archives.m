@@ -159,4 +159,40 @@ set(gca,'XTickLabel',a,'fontsize',16)
 % 
 % legend('Emissions', 'Sum', 'Percentage')
 % hold off
+%% from consumption changes
+%%Water Consumption
+WaterConsumptionCell = Data.WaterConsumptionCell;
 
+RowNames = {'Agriculture', 'Marginal Water Percentage', 'Home Consumption(Urban)', 'Industry', 'Water for Nature', 'Water for Neighbors'};
+    ColNames = {'for home', 'for agriculture', 'for Neighbors', 'for Nature', 'natural from', 'clear from', 'other from', 'desalit from'};
+Initialization = WaterConsumptionCell{1}{:,1:5};
+
+for i =1:Years 
+    %%CurrentConsumption = array2table(zeros(6,5), 'RowNames', RowNames);
+    CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
+  %%CurrentConsumption{:,1} = Initialization(:,1)*1; %% from nature
+ CurrentConsumption{1,1} = Initialization(:,1)*(PrecentegeByTheYears(i)); %% from nature
+    CurrentConsumption{:,2} = Initialization(:,2); %% deslinated - only from scenario
+    CurrentConsumption{:,3} = Initialization(:,3)*(PrecentegeByTheYears(i)); %% all but desalinated
+    CurrentConsumption{:,4} = Initialization(:,4)*(PrecentegeByTheYears(i)); %% all but desalinated
+    CurrentConsumption{:,5} = Initialization(:,5)*(PrecentegeByTheYears(i)); %% all but desalinated
+    ColNames = {'Water From Nature','Diselinated Water','Brackish Water','Treated WasteWater','Flood Water'};
+    CurrentConsumption.Properties.VariableNames = ColNames;
+    WaterConsumptionCell{i} =  CurrentConsumption;
+end
+%% { change in diselinated water consumption - scenario 3  - not useful 
+    for i =1:Years
+        DiselinatedWaterConsumption = WaterConsumptionCell{i}{:,2};
+        DiselinatedWaterConsumption = DiselinatedWaterConsumption*IncreaseInDiselinatedWater(i);
+        WaterConsumptionCell{i}{:,2} = DiselinatedWaterConsumption;
+    end
+  %%
+  function [WaterSum, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcAllButOne(AllButOneScenario,FullScenario, WaterFromFood, WaterFromFoodFull)
+   WaterForAllButOneScenario = sum(AllButOneScenario{1,width(AllButOneScenario)}{1,1}{1,:});
+   WaterForFullScenario = sum(FullScenario{1,width( )}{1,1}{1,:});
+   WaterSum = WaterForFullScenario - WaterForAllButOneScenario; %% m^3*10^6
+
+    GlobalWaterDiff = sum(WaterFromFoodFull{1,width(WaterFromFoodFull)}{1,3:4})/1000000 - sum(WaterFromFood{1,width(WaterFromFood)}{1,3:4})/1000000;
+    LocalWaterDiff = (WaterForFullScenario - sum(WaterFromFoodFull{1,width(WaterFromFoodFull)}{1,3:4})/1000000)...
+    -(WaterForAllButOneScenario - sum(WaterFromFood{1, width(WaterFromFood)}{1,3:4})/1000000);
+end

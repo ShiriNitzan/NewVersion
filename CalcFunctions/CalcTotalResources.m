@@ -1,10 +1,10 @@
 function [Area, Costs, Water] = CalcTotalResources(Resources, ConsumptionAmounts)
     Area = array2table(zeros(5,width(Resources)));
     Costs = array2table(zeros(5,width(Resources)));
-    Water = array2table(zeros(6,width(Resources)));
-    Area.Properties.RowNames = {'Area For Electricity', 'Area for Food - Local', 'Area For food - Gloabl', 'Area For Construction', 'Total'};
+    Water = array2table(zeros(4,width(Resources)));
+    Area.Properties.RowNames = {'Electricity- Local', 'Food - Local', 'Food - Gloabl', 'Construction - Local', 'Total'};
     Costs.Properties.RowNames = {'Operating Costs', 'Setting Costs', 'Fuels Costs', 'Cost of Area for PV', 'Total'};
-    Water.Properties.RowNames = {'Water From Nature', 'Desalinated Water', 'Brackish Water', 'Treated Waste Water', 'Flood Water', 'Total'};
+    Water.Properties.RowNames = {'Drilling Water', 'Desalinated Water', 'Brackish & Reservoirs Water', 'Reclaimed Wastewater'};
     ColumnNames = ones(1,width(Resources));
     for i = 1:width(ColumnNames)
         ColumnNames(i) = 2016+i;
@@ -40,12 +40,18 @@ function [Area, Costs, Water] = CalcTotalResources(Resources, ConsumptionAmounts
     end
     for i = 1:width(Water)
      %%Water{1:5,i} = ((ConsumptionAmounts.(i){1,1}{7,1:5}))';
-         Water{1:5,i} = ((ConsumptionAmounts.(i){1,1}{7,:}))';
+         Water{1,i} = ConsumptionAmounts.(i){1,1}{1,5};
+         Water{2,i} = ConsumptionAmounts.(i){1,1}{1,8};
+         Water{3,i} = 400;
+         Water{4,i} = ConsumptionAmounts.(i){1,1}{1,6};
+      
+
+
     end    
     Area{4,:} = AreaConstruction;
     for i = 1:width(Area)
         Area{5,i} = sum(Area{1:4,i});
         Costs{5,i} = sum(Costs{1:4,i});       
-        Water{6,i} = sum(Water{1:5,i});
+        Water{6,i} = sum(Water{1:4,i});
     end    
 end

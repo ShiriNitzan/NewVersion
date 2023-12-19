@@ -21,6 +21,9 @@ AllButOneScenariosTable.Properties.VariableNames = ColumnNames;
 %%ConsumptionChanges.Properties.VariableNames = ColumnNames;
 
 %% choose measures
+ChooseSteps = 6 ;
+%{ 
+% in comma for running faster
 if(ScenarioNumber == 0)
 ChooseSteps = choiceList('Select a scenario','Choose one of the scenarios and follow the instructions.', {'Population Growth','Electricity Per Capita','Desalinated Water','Beef Consumption','Food Loss', 'All'}); 
     if(ChooseSteps==6)
@@ -40,6 +43,8 @@ ChooseSteps = choiceList('Select a scenario','Choose one of the scenarios and fo
     end
     
 end
+
+%}
 
 if(ScenarioNumber ~= 0 && q.Results.OnlyOne == true)
     ChooseSteps = [ScenarioNumber];
