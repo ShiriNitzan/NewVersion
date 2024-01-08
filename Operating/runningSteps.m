@@ -16,20 +16,15 @@ switch orderIndex
 
         for i = 1:ScenarioNumber
             OnlyOneStepScenariosTable = AllButOneChangesByScenarios(DataBase, i, Years, ScenariosAndValues{:,scenarioIndex}, 'OnlyOne', true);
-            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, OnlyOneStepScenariosTable, Years,population);   
+            [population] = populationCal(OnlyOneStepScenariosTable);
+            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenarioOnlyOneStep(DataBase, OnlyOneStepScenariosTable, Years,population,i);   
             EmissionsSumCurrentBase = EmissionsSumCalcOnlyOneStep(EmissionsByYears,Years);
-        
             GlobalLocalEmissions = CalcGlobalLocal(EmissionsByYears);
             GlobalDiff = sum(GlobalLocalEmissions{2,width(GlobalLocalEmissions)}{1,:}) - sum(GlobalLocalEmissions{2,1}{1,:});
-            LocalDiff = sum(GlobalLocalEmissions{1,width(GlobalLocalEmissions)}{1,:}) - sum(GlobalLocalEmissions{1,1}{1,:});
-            
-             if i == 1
-              localWaterForFood = sum(WaterFromFood{1,width(WaterFromFood)}{1,1:2})/1000000;
-             end
-   
-            [WaterSumCurrent, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcOnlyOne(ConsumptionAmounts, WaterFromFood,localWaterForFood);
+            LocalDiff = sum(GlobalLocalEmissions{1,width(GlobalLocalEmissions)}{1,:}) - sum(GlobalLocalEmissions{1,1}{1,:});           
+            [WaterSumCurrent, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcOnlyOne(ConsumptionAmounts, WaterFromFood,i);
             [AreaSumCurrent, GlobalAreaDiff, LocalAreaDiff] = AreaSumCalcOnlyOne(Resources); 
-           
+          
             OnlyOneAnalysis{i,1} = EmissionsSumCurrentBase(1);
             OnlyOneAnalysis{i,2} = GlobalDiff;
             OnlyOneAnalysis{i,3} = LocalDiff;
@@ -45,11 +40,13 @@ switch orderIndex
     case 3 %% All steps but one
         
         AllButOneScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,scenarioIndex});
+        [population] = populationCal(AllButOneScenariosTable);
         [EmissionsByYearsFull, ConsumptionAmountsFull, ResourcesFull, WaterFromFoodFull] = FullScenario(DataBase, AllButOneScenariosTable, Years, population);
         GlobalLocalEmissionsFull = CalcGlobalLocal(EmissionsByYearsFull);
         for i = 1:ScenarioNumber  
             AllButOneScenariosTable = AllButOneChangesByScenarios(DataBase, i, Years, ScenariosAndValues{:,scenarioIndex});
-            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, AllButOneScenariosTable, Years, pop);
+            [population] = populationCal(AllButOneScenariosTable);       
+            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, AllButOneScenariosTable, Years, population);
             CurrentEmissions = EmissionsSumCalcAllButOne(EmissionsByYears, EmissionsByYearsFull,Years);
             GlobalLocalEmissions = CalcGlobalLocal(EmissionsByYears);
             GlobalDiff = sum(GlobalLocalEmissionsFull{2,width(GlobalLocalEmissionsFull)}{1,:}) - sum(GlobalLocalEmissions{2,width(GlobalLocalEmissions)}{1,:});
@@ -70,12 +67,15 @@ switch orderIndex
       
     case 4 %% All the steps together
         [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4}, 'MileStones', false);
+        [population] = populationCal(FullScenariosTable1);
         [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1] = FullScenario(DataBase, FullScenariosTable1,Years,population);
     
         [FullScenariosTable2] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7}, 'MileStones', false);
+        [population] = populationCal(FullScenariosTable2);
         [EmissionsByYearsTest2, ConsumptionAmounts2, Resources2] = FullScenarioCompare(DataBase, FullScenariosTable2,Years,population,EmissionsByYearsTest1);
 
         [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
+        [population] = populationCal(FullScenariosTable3);
         [EmissionsByYearsTest3, ConsumptionAmounts3, Resources3] = FullScenarioCompare(DataBase, FullScenariosTable3,Years,population,EmissionsByYearsTest1);
         
 
@@ -99,6 +99,7 @@ switch orderIndex
                   ScenariosAndValues{2,scenarioIndex} =  ElectricityPerCapita{1,j};
                   ScenariosAndValues{3,scenarioIndex} =  DesalinatedWater{1,i};
                   ScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,scenarioIndex}, 'MileStones', false);
+                  [population] = populationCal(ScenariosTable);
                   [EmissionsTable, ConsumptioTable, Resources] = FullScenario(DataBase, ScenariosTable, Years,population);
                   SensitivityAnalysisCell{1, l} = EmissionsTable;
                   SensitivityAnalysisCell{2, l} = ConsumptioTable;

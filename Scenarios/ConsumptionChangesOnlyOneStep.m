@@ -1,4 +1,5 @@
- function [ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WateAndRecyclingCell, AmountsOfFuelsCells, OrganicWasteAmount] = ConsumptionChanges(Data, PrecentegeByTheYears,Years,pop, varargin)
+ function [ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WateAndRecyclingCell, AmountsOfFuelsCells, OrganicWasteAmount] = ConsumptionChangesOnlyOneStep(Data, PrecentegeByTheYears,Years,pop, varargin)
+% A function that correctly calculates the water model for a single scenario. There is an option to merge with FULLSCENARIO, you need to debug
 %% Electricity Consumption
 p = inputParser;
 addOptional(p,'ChangesStruct', []);
@@ -83,17 +84,9 @@ CurrentConsumption{1,7} = 400;
 CurrentConsumption{1,8} = 586;
 
 WaterConsumptionCell{1} =  CurrentConsumption;
-for i =2:Years 
-    CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
-    CurrentConsumption{1,1} = pop{3,i}*110.452; % Water for Domestic & Industrial
-    CurrentConsumption{1,2} = pop{3,i}*waterData{1,i}; % for agriculture
-    CurrentConsumption{1,3} = pop{4,i}*20.31282+90; % Water for Neighbors
-    CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
-    CurrentConsumption{1,5} = waterData{3,i}; %% natural from
-    CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
-    CurrentConsumption{1,7} = 400; %% Brackish water, fresh and non-fresh reservoir water
-    CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
-    if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
+if PrecentegeByTheYears(1) == PrecentegeByTheYears(width(PrecentegeByTheYears)) %The essential change that ensures the correctness of the water mod in a single scenario
+    for i =2:Years
+        CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
         CurrentConsumption{1,1} = 1070;
         CurrentConsumption{1,2} = 1300;
         CurrentConsumption{1,3} = 190;
@@ -102,10 +95,34 @@ for i =2:Years
         CurrentConsumption{1,6} = 636;
         CurrentConsumption{1,7} = 400;
         CurrentConsumption{1,8} = 524;  
+
+        WaterConsumptionCell{i} =  CurrentConsumption;
     end
-   
-    WaterConsumptionCell{i} =  CurrentConsumption;
-end
+else
+    for i =2:Years 
+        CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
+        CurrentConsumption{1,1} = pop{3,i}*110.452; % Water for Domestic & Industrial
+        CurrentConsumption{1,2} = pop{3,i}*waterData{1,i}; % for agriculture
+        CurrentConsumption{1,3} = pop{4,i}*20.31282+90; % Water for Neighbors
+        CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
+        CurrentConsumption{1,5} = waterData{3,i}; %% natural from
+        CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
+        CurrentConsumption{1,7} = 400; %% Brackish water, fresh and non-fresh reservoir water
+        CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
+        if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
+            CurrentConsumption{1,1} = 1070;
+            CurrentConsumption{1,2} = 1300;
+            CurrentConsumption{1,3} = 190;
+            CurrentConsumption{1,4} = 25;
+            CurrentConsumption{1,5} = 1080;
+            CurrentConsumption{1,6} = 636;
+            CurrentConsumption{1,7} = 400;
+            CurrentConsumption{1,8} = 524;  
+        end
+       
+          WaterConsumptionCell{i} =  CurrentConsumption;
+    end
+  end
 
 %% Construction
 
@@ -291,5 +308,17 @@ for i = 1:length(MileStoneVector)
     end
 end
 end
+
+% function GrowthVector = GrowthVectorCalc(StartYear, EndYear, EndYearVal, StartYearVal)
+% Period = EndYear-StartYear+1;
+% GrowthVector = ones(1, Period);
+% GrowthVector(1) = 1 + StartYearVal;
+% GrowthVector(Period) = 1+EndYearVal; 
+% FutureValue = GrowthVector(Period);
+% Rate = nthroot(FutureValue/GrowthVector(1),Period-1);
+%     for i = 1:Period
+%         GrowthVector(i) = GrowthVector(1)*((Rate)^(i-1));
+%     end
+% end
 
 end

@@ -1,4 +1,4 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop)
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioOnlyOneStep(Data,ScenariosTable,Years,pop,index)
 %% Cut Vectors from Scenarios Table
 
 PopulationGrowthPercentage = ScenariosTable{1,:};
@@ -27,7 +27,7 @@ EmissionsByYears = cell(11,Years);
 ConsumptionAmounts = cell(4,Years);
 addpath("CalcFunctions");
 ConsumptionChangesTable = PopulationGrowthPercentage;
-[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell, OrganicWasteCell] = ConsumptionChanges(Data, ConsumptionChangesTable, Years,pop);
+[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell, OrganicWasteCell] = ConsumptionChangesOnlyOneStep(Data, ConsumptionChangesTable, Years,pop);
 
 YearsStringsForColNames = cell(1,Years);
 for i=1:Years
@@ -39,21 +39,19 @@ end
 WaterFromFoodCell = cell(1,Years);
 CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5;
 
-
 for i=1:Years
     CurrentFoodConsumption = FoodConsumptionCell{i};
-    CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
-    CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
-    for j = 10:14
-        CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
-        CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
-    end    
-    for j = 1:width(CurrentFoodConsumption)
-        CurrentFoodConsumption{:,j} = CurrentFoodConsumption{:,j}.*PreventingFoodLoss(i);
-    end
 
-    if i == 34
-        c = sum(FoodConsumptionCell{1,34}{:,:});
+    if index == 4 || index == 5
+        CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
+        CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
+        for j = 10:14
+            CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
+            CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
+        end    
+        for j = 1:width(CurrentFoodConsumption)
+            CurrentFoodConsumption{:,j} = CurrentFoodConsumption{:,j}.*PreventingFoodLoss(i);
+        end
     end
 
     WaterFromFoodCell{i} = CalcWaterForFoodConsumption(Data, CurrentFoodConsumption);
@@ -62,9 +60,7 @@ for i=1:Years
     FoodConsumptionCell{i} = CurrentFoodConsumption;
 end
 
-c = sum(FoodConsumptionCell{1,34}{:,:});
 
-%% Water Emissions
 for i = 1:Years
     EmmisionsFromSewegeTreatment = CalcSewegeEmissions(Data, WaterConsumptionCell{i});
     EmissionsByYears{10,i} = EmmisionsFromSewegeTreatment;
@@ -249,11 +245,6 @@ for i=1:Years
     CurrentYearElectricity(6) = TotalElectricityFromWater;
     ElectricityConsumptionTable{6,i} = CurrentYearElectricity(6);
     [EmissionsByYears{2,i}, ElectricityBySources{1:6,i}] = CalcElectricityConsumption(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i},WasteInciniration(i));
-   
-    if i == 34
-         check = 1;
-    end 
-    
     [EmissionsByYears{3,i},ConsumptionAmounts{2,i}] = CalcElectricityManufacturing(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i});
     ElectricityBySources{7,i} = sum(ElectricityBySources{1:6,i});
 end
@@ -307,7 +298,7 @@ for i = 1:Years
     Resources{2,i} = TotalArea;
 end
 
-for i = 1:Years
+for i = 1:Years 
     CurrentAreaForFood = CalcAreaForFoodConsumption(FoodConsumptionCell{i}, Data.AreaForFoodCoefficients);
     CurrentAreaForFood{:,:} = CurrentAreaForFood{:,:}/1000;%% km^2
     Resources{3,i} = CurrentAreaForFood; 
@@ -343,8 +334,13 @@ end
 %% Construction area 
 InitBuiltArea = Data.TotalBuiltArea;
 Resources{8,1} = InitBuiltArea;
+
 for i = 2:Years
-     Resources{8,i} = ConstructionTable{height(ConstructionTable),i}/1000 + Resources{8,i-1};
+   if ConstructionTable{height(ConstructionTable),1} ~= ConstructionTable{height(ConstructionTable),width(ConstructionTable)} %Guarantees that there will be no addition to the scope of construction if there is none
+        Resources{8,i} = ConstructionTable{height(ConstructionTable),i}/1000 + Resources{8,i-1};
+   else
+        Resources{8,i} = InitBuiltArea;
+   end
 end
 %% Create Final Table
 

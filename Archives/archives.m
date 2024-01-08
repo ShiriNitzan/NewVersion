@@ -196,3 +196,28 @@ end
     LocalWaterDiff = (WaterForFullScenario - sum(WaterFromFoodFull{1,width(WaterFromFoodFull)}{1,3:4})/1000000)...
     -(WaterForAllButOneScenario - sum(WaterFromFood{1, width(WaterFromFood)}{1,3:4})/1000000);
 end
+%% Water Emissions
+% from full scenrio
+ WaterForFoodPercentages = Data.WaterForFoodPercentages;
+    for i=1:Years
+        WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:2});
+        WaterFromAgriculture = WaterForFoodPercentages*sum(WaterFromFoodCell{i}{1,1:4});probebly mistake that sum also global water to local water 
+        WaterConsumptionCell{i}{1,1:5} = WaterFromAgriculture;
+     WaterConsumptionCell{i}{1,2:5} = WaterFromAgriculture(1,2:5);
+    end
+
+for i=1:Years
+    EmissionsByYears{11,i} = WaterFromFoodCell{i} ;
+end
+%% ConsumptionChanges
+% function GrowthVector = GrowthVectorCalc(StartYear, EndYear, EndYearVal, StartYearVal)
+% Period = EndYear-StartYear+1;
+% GrowthVector = ones(1, Period);
+% GrowthVector(1) = 1 + StartYearVal;
+% GrowthVector(Period) = 1+EndYearVal; 
+% FutureValue = GrowthVector(Period);
+% Rate = nthroot(FutureValue/GrowthVector(1),Period-1);
+%     for i = 1:Period
+%         GrowthVector(i) = GrowthVector(1)*((Rate)^(i-1));
+%     end
+% end
