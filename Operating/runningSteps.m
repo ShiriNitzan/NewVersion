@@ -68,15 +68,15 @@ switch orderIndex
     case 4 %% All the steps together
         [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable1);
-        [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1] = FullScenario(DataBase, FullScenariosTable1,Years,population);
+        [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1, WaterFromFood1] = FullScenario(DataBase, FullScenariosTable1,Years,population);
     
         [FullScenariosTable2] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable2);
-        [EmissionsByYearsTest2, ConsumptionAmounts2, Resources2] = FullScenarioCompare(DataBase, FullScenariosTable2,Years,population,EmissionsByYearsTest1);
+        [EmissionsByYearsTest2, ConsumptionAmounts2, Resources2, WaterFromFood2] = FullScenarioCompare(DataBase, FullScenariosTable2,Years,population,WaterFromFood1);
 
         [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable3);
-        [EmissionsByYearsTest3, ConsumptionAmounts3, Resources3] = FullScenarioCompare(DataBase, FullScenariosTable3,Years,population,EmissionsByYearsTest1);
+        [EmissionsByYearsTest3, ConsumptionAmounts3, Resources3, WaterFromFood3] = FullScenarioCompare(DataBase, FullScenariosTable3,Years,population,WaterFromFood1);
         
 
 

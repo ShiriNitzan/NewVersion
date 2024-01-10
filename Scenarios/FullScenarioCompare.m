@@ -1,4 +1,4 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioCalWater(Data,ScenariosTable,Years,pop,EmissionsByYearsTest1)
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioCompare(Data,ScenariosTable,Years,pop,WaterFromFood1)
 %The difference between the second FULLSENARIO function is that here we make comparisons with the results we got earlier
 %% Cut Vectors from Scenarios Table
 
@@ -57,7 +57,7 @@ for i=1:Years
     FoodConsumptionCell{i} = CurrentFoodConsumption;
 
     % Calculates the difference of the results obtained for reducing food use in B.A.U compared to the results obtained in this case (advanced/moderate)
-    BAUResult = EmissionsByYearsTest1{11,i}{1}; 
+    BAUResult = WaterFromFood1{i}; 
     A =  sum(BAUResult{1,1:2})/10^6;
     B =  sum(WaterFromFoodCell{i}{1,1:2})/10^6;
     gap = A-B;
@@ -73,9 +73,6 @@ for i = 1:Years
     EmmisionsFromSewegeTreatment = CalcSewegeEmissions(Data, WaterConsumptionCell{i});
     EmissionsByYears{10,i} = EmmisionsFromSewegeTreatment;
 end
-
-
-
 
 %% water saving - scenario 19
 for i=1:Years

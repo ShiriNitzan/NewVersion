@@ -158,12 +158,15 @@ xlabel('Scenarios', 'FontSize', 20);
 ylabel('MtCO2Eq', 'FontSize', 20);
 legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',8,'Location','northwest')
 
-% Define the data for the new row
+ 
+%Define the data for the new row
  for i = 1:width(WaterSum1)
-    newData1{1,i} = (EmissionsByYearsTest1{11,i}{1,1}{1,3}+ EmissionsByYearsTest1{11,i}{1,1}{1,4})/1000000;        newData1{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
+    newData1{1,i} = (EmissionsByYearsTest1{11,i}{1,1}{1,3}+ EmissionsByYearsTest1{11,i}{1,1}{1,4})/1000000;       
     newData2{1,i} = (EmissionsByYearsTest2{11,i}{1,1}{1,3}+ EmissionsByYearsTest2{11,i}{1,1}{1,4})/1000000;
     newData3{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
  end
+
+
 % Add the new row using addvars
 
 % Create a new table with the new row
