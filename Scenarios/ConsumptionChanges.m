@@ -44,7 +44,7 @@ end
 waterData  = array2table(zeros(3,34));
 RowNames = {'Agriculture per capita', 'Water for nature', 'Drilling Water'};
 waterData.Properties.RowNames = RowNames;
-waterData(3,1) = {956}; % Drilling Water
+waterData(3,1) = {956}; % Ground Water
 for i =1:34
    waterData(1,i) = {-10.79*log(i+16)+167.91}; % Agriculture per capita
    switch true % water for nature
@@ -57,7 +57,7 @@ for i =1:34
        case i>=25 & i<35
           waterData(2,i) = {75};
    end
-   if i>1    % Drilling Water
+   if i>1    % Ground Water
        waterData(3,i) = {waterData{3,i-1}*0.9901};
        if i==6 %A djustment to the water model data for 2022, until all the data in the software is updated
             waterData(3,i) = {1080};
@@ -79,7 +79,7 @@ CurrentConsumption{1,3} = 137;
 CurrentConsumption{1,4} = 23;
 CurrentConsumption{1,5} = 940;
 CurrentConsumption{1,6} = 512;
-CurrentConsumption{1,7} = 400;
+CurrentConsumption{1,7} = 250;
 CurrentConsumption{1,8} = 586;
 
 WaterConsumptionCell{1} =  CurrentConsumption;
@@ -91,7 +91,7 @@ for i =2:Years
     CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
     CurrentConsumption{1,5} = waterData{3,i}; %% natural from
     CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
-    CurrentConsumption{1,7} = 400; %% Brackish water, fresh and non-fresh reservoir water
+    CurrentConsumption{1,7} = 250; %% Brackish water, fresh and non-fresh reservoir water
     CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
     if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
         CurrentConsumption{1,1} = 1070;
@@ -100,7 +100,7 @@ for i =2:Years
         CurrentConsumption{1,4} = 25;
         CurrentConsumption{1,5} = 1080;
         CurrentConsumption{1,6} = 636;
-        CurrentConsumption{1,7} = 400;
+        CurrentConsumption{1,7} = 250;
         CurrentConsumption{1,8} = 524;  
     end
    

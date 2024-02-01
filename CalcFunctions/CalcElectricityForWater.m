@@ -39,7 +39,7 @@
  ElectricityForWaterConsumption{3,1} = MovingReclaimedWastewaterElectricity*LossRatio;
  ElectricityForWaterConsumption{4,1} = ReclaimedWastewaterElectricity*LossRatio;
  ElectricityForWaterConsumption{5,1} = MovingBrackishandReservoirWater*LossRatio;
- ElectricityForWaterConsumption{6,1} = sum(ElectricityForWaterConsumption{1:5,1})*1000000;
+ ElectricityForWaterConsumption{6,1} = sum(ElectricityForWaterConsumption{1:5,1})*1000000; %to compare to a cubic meter
  %{
      ElectricityForWaterConsumption{1,1} = FromNatureElectrcity*LossRatio;
      ElectricityForWaterConsumption{2,1} = UrbanElectricity*LossRatio;

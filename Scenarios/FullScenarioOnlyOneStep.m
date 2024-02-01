@@ -23,7 +23,7 @@ WaterSaving = ScenariosTable{19,:};
 
 %% Preparations - scenario 1`
 
-EmissionsByYears = cell(11,Years);
+EmissionsByYears = cell(10,Years);
 ConsumptionAmounts = cell(4,Years);
 addpath("CalcFunctions");
 ConsumptionChangesTable = PopulationGrowthPercentage;
@@ -279,11 +279,13 @@ DeltaKW = array2table(zeros(7,Years)); %% the difference in installed KW for the
 DeltaKW{:,1} = KWForElectricity{:,1};
 for i = 2:Years
     DeltaKW{:,i} =  KWForElectricity{:,i} - KWForElectricity{:,i-1};
+   %{
     for j = 1:height(DeltaKW)
         if (DeltaKW{j,i}) < 0
             DeltaKW{j,i} = 0;
         end
-    end    
+    end 
+   %}
 end
 
 DeltaKW.Properties.RowNames = {'Coal','Natural Gas', 'PV', 'Wind', 'Biomass', 'Thermo Solar', 'Total'};
@@ -324,7 +326,7 @@ end
 
 % cost of fuels
 for i = 1:Years
-    Resources{6,i} = CalcFuelCosts(ConsumptionAmounts{2,i}{1,1:2}, Data.ILSPerTon{:,1});
+    Resources{6,i} = CalcFuelCosts(ConsumptionAmounts{2,i}{1,:},ConsumptionAmounts{3,i}{1,:}, Data.ILSPerTon{:,1}, Data.ILSPerTon{:,3});
 end
 
 % cost of area
@@ -344,7 +346,7 @@ for i = 2:Years
 end
 %% Create Final Table
 
-RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment', 'Water from food'};
+RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment'};
 EmissionsByYears = cell2table(EmissionsByYears, 'RowNames', RowNames);
 EmissionsByYears.Properties.VariableNames = YearsStringsForColNames;
 

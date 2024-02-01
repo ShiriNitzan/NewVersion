@@ -80,7 +80,7 @@ CurrentConsumption{1,3} = 137;
 CurrentConsumption{1,4} = 23;
 CurrentConsumption{1,5} = 940;
 CurrentConsumption{1,6} = 512;
-CurrentConsumption{1,7} = 400;
+CurrentConsumption{1,7} = 250;
 CurrentConsumption{1,8} = 586;
 
 WaterConsumptionCell{1} =  CurrentConsumption;

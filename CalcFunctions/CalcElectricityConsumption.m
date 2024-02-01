@@ -5,8 +5,8 @@ function [TotalElectricityConsumptionEmissions, CurrentYearTotal] = CalcElectric
     
     %% Create Table
 
-    RowNames = {'Home', 'Public & Commercial', 'Industrial', 'Other', 'Transportation', 'Water Supply & Sewage Treatment','Total'};
-    CurrentYear = zeros(7,6);
+    RowNames = {'Home', 'Public & Commercial', 'Industrial', 'Other', 'Transportation', 'Water Local','Water Global','Total'};
+    CurrentYear = zeros(8,6);
     CurrentYear = array2table(CurrentYear, 'RowNames', RowNames);
     CurrentYear.Properties.VariableNames = {'KWh From Coal', 'KWh From Natural Gas', 'KWh From Renewable Energies', 'KWh From Soler', 'KWh From Mazut', 'KWh From Waste Incinaration'};
 
@@ -23,20 +23,20 @@ function [TotalElectricityConsumptionEmissions, CurrentYearTotal] = CalcElectric
     end
 
     KwhFromInciniration = Data.WasteToElectricity*WasteIncinaration;
-    if(CurrentYear{7,1} > KwhFromInciniration)
-        CurrentYear{7,1} = CurrentYear{7,1}-KwhFromInciniration;
+    if(CurrentYear{8,1} > KwhFromInciniration)
+        CurrentYear{8,1} = CurrentYear{8,1}-KwhFromInciniration;
     else
-        KwhFromInciniration = CurrentYear{7,1};
+        KwhFromInciniration = CurrentYear{8,1};
         CurrentYear{:,1} = 0;
     end
 
-    CurrentYear{7,6} = KwhFromInciniration;
+    CurrentYear{8,6} = KwhFromInciniration;
     
     CurrentYearTotal = table2array(CurrentYear('Total',:))';
     %% Emissions Tables
 
     for Table=1:6
-        Temp = zeros(7,9);
+        Temp = zeros(8,9);
         Temp = array2table(Temp, 'RowNames', RowNames);
         Temp.Properties.VariableNames = {'Co2', 'CH4', 'Nitrous Oxide (N2O)', 'NOX', 'PM', 'SO2', 'Other Air Pollutants', 'Sewage', 'Co2e'};
         for j=1:width(Temp)-1
@@ -64,7 +64,7 @@ function [TotalElectricityConsumptionEmissions, CurrentYearTotal] = CalcElectric
     end
 
     
-    TotalElectricityConsumptionEmissions = array2table(zeros(7,9), 'RowNames', RowNames);
+    TotalElectricityConsumptionEmissions = array2table(zeros(8,9), 'RowNames', RowNames);
     TotalElectricityConsumptionEmissions.Properties.VariableNames = {'Co2', 'CH4', 'Nitrous Oxide (N2O)', 'NOX', 'PM', 'SO2', 'Other Air Pollutants', 'Sewage', 'Co2e'};
     for i=1:height(TotalElectricityConsumptionEmissions)
         for j=1:width(TotalElectricityConsumptionEmissions)

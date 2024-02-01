@@ -2,9 +2,7 @@
 % To be used after selecting "all steps together"
 
 %preparations
-[AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1);
-[AreaSum2, CostsSum2, WaterSum2] = CalcTotalResources(Resources2, ConsumptionAmounts2);
-[AreaSum3, CostsSum3, WaterSum3] = CalcTotalResources(Resources3, ConsumptionAmounts3);
+[AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1, WaterFromFood1);
 
 % Arranging the data and building the graph
 t = tiledlayout(1,3);
@@ -37,6 +35,14 @@ colors3Water = [
     0, 0.45, 0.74;  
     0.46, 0.72, 0.89;  
     0.92, 0.93, 0.93;  
+    0.72, 0.27, 1.0;
+];
+
+colors4Cost = [
+    0.1, 0.31, 0.5;  
+    0, 0.45, 0.74;  
+    0.85, 0.33, 0.1; 
+    0.72, 0.27, 1.0;
 ];
 
 Order = {'All Sectors'};
@@ -51,14 +57,16 @@ for i = 1:numel(b)
 end
 
 ylim([0 120])
-title('Emissions', 'FontSize', 14);
+title('Emissions', 'FontSize', 14,'Position', [1, 123, 0]);
 ylabel('MtCO2Eq', 'FontSize', 20);
 legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',8,'Location','northwest')
 
 AreaSum1 = sortrows(AreaSum1,1,'descend');
 WaterSum1 = sortrows(WaterSum1,1,'descend');
+CostsSum1 = sortrows(CostsSum1,1,'descend');
 AreaSum1(1, :) = [];
 WaterSum1(1, :) = [];
+CostsSum1(1, :) = [];
 
 nexttile
 Order = {'All Sectors'};
@@ -73,12 +81,12 @@ for i = 1:numel(b)
 end
 
 ylim([0 35000])
-title('Area', 'FontSize',14);
-ylabel('Km^2', 'FontSize', 20);
+title('Area', 'FontSize',14,'Position', [1, 35875, 0]);
+ylabel('km^2', 'FontSize', 20);
 legend(flip(b), flip(AreaSum1.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
 
 Order = {'All Sectors'};
-y = [WaterSum1{1:4,1}];
+y = [WaterSum1{1:5,1}];
 y = y';
 x = categorical({'All Sectors'});
 x = reordercats(x, Order);
@@ -90,17 +98,35 @@ for i = 1:numel(b)
 end
 
 ylim([0 3500]) 
-title('Water', 'FontSize', 14);
-ylabel('Million M^3', 'FontSize', 20);
-legend(flip(b), flip(WaterSum1.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
+title('Water', 'FontSize', 14,'Position', [1, 3580, 0]);
+ylabel('Million m^3', 'FontSize', 20);
+legend(flip(b), flip(WaterSum1.Properties.RowNames(1:5)), 'FontSize',10,'Location','northwest')
+%%
+Order = {'All Sectors'};
+y = [CostsSum1{1:4,1}];
+y = y';
+x = categorical({'All Sectors'});
+x = reordercats(x, Order);
+nexttile
+
+b = bar(x, y, 'stacked');
+
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors4Cost(i, :));
+end
+
+ylim([0 150]) 
+title('Cost', 'FontSize', 14,'Position', [1, 123, 0]);
+ylabel('Billion ILS', 'FontSize', 20);
+legend(flip(b), flip(CostsSum1.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
 
 %% emissions-area-water-base year to last year
-% To be used after selecting "all steps together"
+% To be used after selecting "all steps together" 
 
 %preparations
-[AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1);
-[AreaSum2, CostsSum2, WaterSum2] = CalcTotalResources(Resources2, ConsumptionAmounts2);
-[AreaSum3, CostsSum3, WaterSum3] = CalcTotalResources(Resources3, ConsumptionAmounts3);
+[AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1,WaterFromFood1);
+[AreaSum2, CostsSum2, WaterSum2] = CalcTotalResources(Resources2, ConsumptionAmounts2, WaterFromFood2);
+[AreaSum3, CostsSum3, WaterSum3] = CalcTotalResources(Resources3, ConsumptionAmounts3,WaterFromFood3);
 
 % Arranging the data and building the graph
 
@@ -129,9 +155,16 @@ colors3Water = [
     0, 0.45, 0.74;  
     0.46, 0.72, 0.89;    
     0.92, 0.93, 0.93;  
+    0.72, 0.27, 1.0;
 ];
 
-
+colors4Cost = [
+    0.1, 0.31, 0.5;  
+    0, 0.45, 0.74;  
+    0.85, 0.33, 0.1; 
+    0.72, 0.27, 1.0;
+];
+ 
 t = tiledlayout(1,3);
 nexttile
 BAU = CalcUpDownStream(EmissionsByYearsTest1);
@@ -152,40 +185,35 @@ for i = 1:numel(b)
     set(b(i), 'FaceColor', colors1Em(i, :));
 end
 
-ylim([0 260])
-title('Emissions From Different Scenarios', 'FontSize', 14);
+ylim([0 270])
+title('Emissions', 'FontSize', 14,'Position', [2.5, 275, 0]);
+xticklabels(Order);
+xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);
+
 ylabel('MtCO2Eq', 'FontSize', 20);
 legend(flip(b), flip(BAU.Properties.RowNames(1:10)), 'FontSize',8,'Location','northwest')
 
- 
-%Define the data for the new row
- for i = 1:width(WaterSum1)
-    newData1{1,i} = (EmissionsByYearsTest1{11,i}{1,1}{1,3}+ EmissionsByYearsTest1{11,i}{1,1}{1,4})/1000000;       
-    newData2{1,i} = (EmissionsByYearsTest2{11,i}{1,1}{1,3}+ EmissionsByYearsTest2{11,i}{1,1}{1,4})/1000000;
-    newData3{1,i} = (EmissionsByYearsTest3{11,i}{1,1}{1,3}+ EmissionsByYearsTest3{11,i}{1,1}{1,4})/1000000;
- end
-
-
-% Add the new row using addvars
-
-% Create a new table with the new row
-newRow1 = table(newData1{:}, 'VariableNames', WaterSum1.Properties.VariableNames);
-newRow2 = table(newData2{:}, 'VariableNames', WaterSum2.Properties.VariableNames);
-newRow3 = table(newData3{:}, 'VariableNames', WaterSum3.Properties.VariableNames);
 
 AreaSum1 = sortrows(AreaSum1,1,'descend'); 
 WaterSum1 = sortrows(WaterSum1,1,'descend');
+CostsSum1 = sortrows(CostsSum1,1,'descend');
 AreaSum1(1, :) = [];
 WaterSum1(1, :) = [];
+CostsSum1(1, :) = [];
 AreaSum2 = sortrows(AreaSum2,1,'descend');
 WaterSum2 = sortrows(WaterSum2,1,'descend');
+CostsSum2 = sortrows(CostsSum2,1,'descend');
 AreaSum2(1, :) = [];
 WaterSum2(1, :) = [];
+CostsSum2(1, :) = [];
 AreaSum3 = sortrows(AreaSum3,1,'descend');
 WaterSum3 = sortrows(WaterSum3,1,'descend');
+CostsSum3 = sortrows(CostsSum3,1,'descend');
 AreaSum3(1, :) = [];
 WaterSum3(1, :) = [];
+CostsSum3(1, :) = [];
+
 nexttile
 
 
@@ -198,18 +226,19 @@ y = y';
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
 b = bar(x, y, 'stacked');
-
 for i = 1:numel(b)
     set(b(i), 'FaceColor', colors2Area(i, :));
 end
-
 ylim([0 70000])
-title('Area From Different Scenarios', 'FontSize',14);
+title('Area', 'FontSize',14,'Position', [2.5, 71296, 0]);
+xticklabels(Order);
+xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);
-ylabel('Km^2', 'FontSize', 20);
+ylabel('km^2', 'FontSize', 20);
 legend(flip(b), flip(AreaSum3.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
+
 Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
-y = [WaterSum1{1:4,1}, WaterSum1{1:4,34}, WaterSum2{1:4,34}, WaterSum3{1:4,34}];
+y = [WaterSum1{1:5,1}, WaterSum1{1:5,34}, WaterSum2{1:5,34}, WaterSum3{1:5,34}];
 y = y';
 x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
 x = reordercats(x, Order);
@@ -221,12 +250,31 @@ for i = 1:numel(b)
 end
 
 ylim([0 7500]) 
-title('Water From Different Scenarios', 'FontSize', 14);
+title('Water', 'FontSize', 14,'Position', [2.5, 7638, 0]);
 xlabel('Scenarios', 'FontSize', 20);
-ylabel('Million M^3', 'FontSize', 20);
-legend(flip(b), flip(WaterSum3.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
+xticklabels(Order);
+xtickangle(20);
+ylabel('Million m^3', 'FontSize', 20);
+legend(flip(b), flip(WaterSum3.Properties.RowNames(1:5)), 'FontSize',10,'Location','northwest')
 
+%%
+Order = {'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'};
+y = [CostsSum1{1:4,1}, CostsSum1{1:4,34}, CostsSum2{1:4,34}, CostsSum3{1:4,34}];
+y = y';
+x = categorical({'Base Year', 'BAU - 2050', 'Moderate - 2050', 'Advanced - 2050'});
+x = reordercats(x, Order);
+nexttile
+b = bar(x, y, 'stacked');
 
+for i = 1:numel(b)
+    set(b(i), 'FaceColor', colors3Water(i, :));
+end
+
+ylim([0 400]) 
+title('Costs', 'FontSize', 14);
+xlabel('Scenarios', 'FontSize', 20);
+ylabel('Billion ILS', 'FontSize', 20);
+legend(flip(b), flip(CostsSum3.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
 %% Discussion - emissions
 % To be used after selecting "sensitivity analysis"
 
@@ -265,7 +313,7 @@ b = bar(x,y,'stacked');
 for i = 1:10
     set(b(i), 'FaceColor', colors1Em(i, :));
 end
-
+ylim([0 90]) 
 legend(flip(b(1:10)), flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','north')
 title('Emissions By Sectors - 2050',  'FontSize', 28);
 ylabel('MtCO2Eq', 'FontSize', 20);

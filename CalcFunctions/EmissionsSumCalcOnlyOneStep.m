@@ -1,7 +1,7 @@
 function [EmissionsSum] = EmissionsSumCalcOnlyOneStep(EmissionsByYears, Years)
 
     CO2EFor2014 = sum(EmissionsByYears{1,1}{1,1}{1,:}) + EmissionsByYears{2,1}{1,1}{7,9}+sum(EmissionsByYears{3,1}{1,1}{:,7})+sum(EmissionsByYears{4,1}{1,1}{:,16}) + sum(EmissionsByYears{5,1}{1,1}{:,12})  + sum(EmissionsByYears{6,1}{1,1}{:,7})+sum(EmissionsByYears{7,1}{1,1}{:,2}) + EmissionsByYears{10,1}{1,1}{1,2};
-    CO2EFor2030 = sum(EmissionsByYears{1,Years}{1,1}{1,:}) + EmissionsByYears{2,Years}{1,1}{7,9}+sum(EmissionsByYears{3,Years}{1,1}{:,7})+sum(EmissionsByYears{4,Years}{1,1}{:,16}) +sum(EmissionsByYears{5,1}{1,1}{:,12}) + sum(EmissionsByYears{6,Years}{1,1}{:,7})+sum(EmissionsByYears{7,Years}{1,1}{:,2}) + EmissionsByYears{10,Years}{1,1}{1,2};
+    CO2EFor2030 = sum(EmissionsByYears{1,Years}{1,1}{1,:}) + EmissionsByYears{2,Years}{1,1}{7,9}+sum(EmissionsByYears{3,Years}{1,1}{:,7})+sum(EmissionsByYears{4,Years}{1,1}{:,16}) +sum(EmissionsByYears{5,Years}{1,1}{:,12}) + sum(EmissionsByYears{6,Years}{1,1}{:,7})+sum(EmissionsByYears{7,Years}{1,1}{:,2}) + EmissionsByYears{10,Years}{1,1}{1,2};
     CO2E = CO2EFor2030-CO2EFor2014;
 %     NOXFor2014 = EmissionsByYears{2,1}{1,1}{8,4}+sum(EmissionsByYears{4,1}{1,1}{:,9}) + sum(EmissionsByYears{5,1}{1,1}{:,1})  +EmissionsByYears{7,1}{1,1}{11,3};
 %     NOXFor2030 = EmissionsByYears{2,Years}{1,1}{8,4}+sum(EmissionsByYears{4,Years}{1,1}{:,9}) +sum(EmissionsByYears{5,Years}{1,1}{:,1})  +EmissionsByYears{7,Years}{1,1}{11,3};

@@ -248,7 +248,7 @@ DataBase.AreaForFoodCoefficients = readtable(Data,'Sheet','Food','Range','W3:X67
 %% Money
 DataBase.SettingCosts = readtable(Data,'Sheet','Money','Range','A2:I36','ReadVariableNames',true, 'ReadRowNames',true);
 DataBase.OperatingCosts = readtable(Data,'Sheet','Money','Range','A41:I75','ReadVariableNames',true, 'ReadRowNames',true);
-DataBase.ILSPerTon = readtable(Data,'Sheet','Money','Range','L21:M22','ReadVariableNames',false, 'ReadRowNames',true);
+DataBase.ILSPerTon = readtable(Data,'Sheet','Money','Range','L19:O23','ReadVariableNames',false, 'ReadRowNames',true);
 
 %% 
 DataBase.ChnageStruct = struct;

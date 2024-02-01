@@ -25,7 +25,8 @@ switch orderIndex
             [WaterSumCurrent, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcOnlyOne(ConsumptionAmounts, WaterFromFood,i);
             [AreaSumCurrent, GlobalAreaDiff, LocalAreaDiff] = AreaSumCalcOnlyOne(Resources); 
           
-            OnlyOneAnalysis{i,1} = EmissionsSumCurrentBase(1);
+            %OnlyOneAnalysis{i,1} = EmissionsSumCurrentBase(1);
+            OnlyOneAnalysis{i,1} = GlobalDiff+LocalDiff;
             OnlyOneAnalysis{i,2} = GlobalDiff;
             OnlyOneAnalysis{i,3} = LocalDiff;
             OnlyOneAnalysis{i,4} = WaterSumCurrent;
@@ -53,7 +54,8 @@ switch orderIndex
             LocalDiff = sum(GlobalLocalEmissionsFull{1,width(GlobalLocalEmissionsFull)}{1,:}) - sum(GlobalLocalEmissions{1,width(GlobalLocalEmissions)}{1,:});
             [CurrentWater, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcAllButOne(ConsumptionAmounts, ConsumptionAmountsFull, WaterFromFood, WaterFromFoodFull);
             [CurrentArea, GlobalAreaDiff, LocalAreaDiff] = AreaSumCalcAllButOne(Resources, ResourcesFull);
-            AllButOneAnalysis{i,1} = CurrentEmissions;
+            %AllButOneAnalysis{i,1} = CurrentEmissions;
+            AllButOneAnalysis{i,1} = GlobalDiff+LocalDiff;
             AllButOneAnalysis{i,2} = GlobalDiff;
             AllButOneAnalysis{i,3} = LocalDiff;
             AllButOneAnalysis{i,4} = CurrentWater;
@@ -72,7 +74,7 @@ switch orderIndex
     
         [FullScenariosTable2] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable2);
-        [EmissionsByYearsTest2, ConsumptionAmounts2, Resources2, WaterFromFood2] = FullScenarioCompare(DataBase, FullScenariosTable2,Years,population,WaterFromFood1);
+        [EmissionsByYearsTest2, ConsumptionAmounts2, Resources2, WaterFromFood2] = FullScenarioCompare(DataBase, FullScenariosTable2,Years,population,a);
 
         [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable3);
