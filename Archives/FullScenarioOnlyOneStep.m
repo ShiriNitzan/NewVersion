@@ -40,6 +40,7 @@ WaterFromFoodCell = cell(1,Years);
 CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5;
 
 for i=1:Years
+    
     CurrentFoodConsumption = FoodConsumptionCell{i};
 
     if index == 4 || index == 5

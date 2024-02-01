@@ -17,7 +17,7 @@ switch orderIndex
         for i = 1:ScenarioNumber
             OnlyOneStepScenariosTable = AllButOneChangesByScenarios(DataBase, i, Years, ScenariosAndValues{:,scenarioIndex}, 'OnlyOne', true);
             [population] = populationCal(OnlyOneStepScenariosTable);
-            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenarioOnlyOneStep(DataBase, OnlyOneStepScenariosTable, Years,population,i,orderIndex);   
+            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, OnlyOneStepScenariosTable, Years,population,orderIndex,i);   
             EmissionsSumCurrentBase = EmissionsSumCalcOnlyOneStep(EmissionsByYears,Years);
             GlobalLocalEmissions = CalcGlobalLocal(EmissionsByYears);
             GlobalDiff = sum(GlobalLocalEmissions{2,width(GlobalLocalEmissions)}{1,:}) - sum(GlobalLocalEmissions{2,1}{1,:});
@@ -42,12 +42,12 @@ switch orderIndex
         
         AllButOneScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,scenarioIndex});
         [population] = populationCal(AllButOneScenariosTable);
-        [EmissionsByYearsFull, ConsumptionAmountsFull, ResourcesFull, WaterFromFoodFull] = FullScenario(DataBase, AllButOneScenariosTable, Years, population,orderIndex);
+        [EmissionsByYearsFull, ConsumptionAmountsFull, ResourcesFull, WaterFromFoodFull] = FullScenario(DataBase, AllButOneScenariosTable, Years, population,orderIndex,0);
         GlobalLocalEmissionsFull = CalcGlobalLocal(EmissionsByYearsFull);
         for i = 1:ScenarioNumber  
             AllButOneScenariosTable = AllButOneChangesByScenarios(DataBase, i, Years, ScenariosAndValues{:,scenarioIndex});
             [population] = populationCal(AllButOneScenariosTable);       
-            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, AllButOneScenariosTable, Years, population,orderIndex);
+            [EmissionsByYears, ConsumptionAmounts, Resources, WaterFromFood] = FullScenario(DataBase, AllButOneScenariosTable, Years, population,orderIndex,0);
             CurrentEmissions = EmissionsSumCalcAllButOne(EmissionsByYears, EmissionsByYearsFull,Years);
             GlobalLocalEmissions = CalcGlobalLocal(EmissionsByYears);
             GlobalDiff = sum(GlobalLocalEmissionsFull{2,width(GlobalLocalEmissionsFull)}{1,:}) - sum(GlobalLocalEmissions{2,width(GlobalLocalEmissions)}{1,:});
@@ -70,7 +70,7 @@ switch orderIndex
     case 4 %% All the steps together
         [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable1);
-        [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1, WaterFromFood1] = FullScenario(DataBase, FullScenariosTable1,Years,population,orderIndex);
+        [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1, WaterFromFood1] = FullScenario(DataBase, FullScenariosTable1,Years,population,orderIndex,0);
     
         [FullScenariosTable2] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,7}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable2);
@@ -87,7 +87,7 @@ switch orderIndex
       
     case 5 %% Buisness as usual
         FullBAUScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4});
-        [EmissionsByYearsBAU, ConsumptionAmountsBAU] = FullScenario(DataBase, FullBAUScenariosTable, Years,population,orderIndex);
+        [EmissionsByYearsBAU, ConsumptionAmountsBAU] = FullScenario(DataBase, FullBAUScenariosTable, Years,population,orderIndex,0);
      
         YearlyEmissionsBAU = YearlySumCalc(EmissionsByYearsBAU);
         disp('Buisness as usual');

@@ -1,4 +1,4 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop,orderIndex)
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop,orderIndex, index)
 %% Cut Vectors from Scenarios Table
 
 PopulationGrowthPercentage = ScenariosTable{1,:};
@@ -42,16 +42,17 @@ CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5;
 
 for i=1:Years
     CurrentFoodConsumption = FoodConsumptionCell{i};
-    CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
-    CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
-    for j = 10:14
-        CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
-        CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
-    end    
-    for j = 1:width(CurrentFoodConsumption)
-        CurrentFoodConsumption{:,j} = CurrentFoodConsumption{:,j}.*PreventingFoodLoss(i);
+    if (index == 4 || index == 5 && orderIndex == 2 ) || (orderIndex ~= 2)
+        CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
+        CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
+        for j = 10:14
+            CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
+            CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
+        end    
+        for j = 1:width(CurrentFoodConsumption)
+            CurrentFoodConsumption{:,j} = CurrentFoodConsumption{:,j}.*PreventingFoodLoss(i);
+        end
     end
-
    
 
     WaterFromFoodCell{i} = CalcWaterForFoodConsumption(Data, CurrentFoodConsumption);
@@ -349,7 +350,11 @@ end
 InitBuiltArea = Data.TotalBuiltArea;
 Resources{8,1} = InitBuiltArea;
 for i = 2:Years
+    if (orderIndex == 2 && ConstructionTable{height(ConstructionTable),1} ~= ConstructionTable{height(ConstructionTable),width(ConstructionTable)}) || orderIndex ~= 2
      Resources{8,i} = ConstructionTable{height(ConstructionTable),i}/1000 + Resources{8,i-1};
+    else
+            Resources{8,i} = InitBuiltArea;
+    end
 end
 %% Create Final Table
 
