@@ -1,4 +1,4 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop)
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop,orderIndex)
 %% Cut Vectors from Scenarios Table
 
 PopulationGrowthPercentage = ScenariosTable{1,:};
@@ -27,7 +27,7 @@ EmissionsByYears = cell(10,Years);
 ConsumptionAmounts = cell(4,Years);
 addpath("CalcFunctions");
 ConsumptionChangesTable = PopulationGrowthPercentage;
-[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell, OrganicWasteCell] = ConsumptionChanges(Data, ConsumptionChangesTable, Years,pop);
+[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell, OrganicWasteCell] = ConsumptionChanges(Data, ConsumptionChangesTable, Years,pop,orderIndex);
 
 YearsStringsForColNames = cell(1,Years);
 for i=1:Years

@@ -1,4 +1,4 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioCompare(Data,ScenariosTable,Years,pop,WaterFromFood1)
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioCompare(Data,ScenariosTable,Years,pop,WaterFromFood1,orderIndex)
 %The difference between the second FULLSENARIO function is that here we make comparisons with the results we got earlier
 %% Cut Vectors from Scenarios Table
 

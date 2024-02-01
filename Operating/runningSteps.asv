@@ -87,8 +87,7 @@ switch orderIndex
       
     case 5 %% Buisness as usual
         FullBAUScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4});
-        [EmissionsByYearsBAU, ConsumptionAmountsBAU] = FullScenario(DataBase, FullBAUScenariosTable, Years,population,orderIndex);
-     
+        [EmissionsByYearsBAU, ConsumptionAmountsBAU] = FullScenario(DataBase, FullBAUScenariosTable, Years);
         YearlyEmissionsBAU = YearlySumCalc(EmissionsByYearsBAU);
         disp('Buisness as usual');
             
@@ -103,7 +102,7 @@ switch orderIndex
                   ScenariosAndValues{3,scenarioIndex} =  DesalinatedWater{1,i};
                   ScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,scenarioIndex}, 'MileStones', false);
                   [population] = populationCal(ScenariosTable);
-                  [EmissionsTable, ConsumptioTable, Resources] = FullScenario(DataBase, ScenariosTable, Years,population,orderIndex);
+                  [EmissionsTable, ConsumptioTable, Resources] = FullScenario(DataBase, ScenariosTable, Years,population);
                   SensitivityAnalysisCell{1, l} = EmissionsTable;
                   SensitivityAnalysisCell{2, l} = ConsumptioTable;
                   SensitivityAnalysisCell{3, l} = Resources;
