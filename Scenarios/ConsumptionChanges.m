@@ -74,11 +74,11 @@ Initialization = WaterConsumptionCell{1}{:,1:5};
 CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
 %%2017 Data
 CurrentConsumption{1,1} = 983;
-CurrentConsumption{1,2} = 1253;
-CurrentConsumption{1,3} = 137;
+CurrentConsumption{1,2} = 1248;
+CurrentConsumption{1,3} = 135;
 CurrentConsumption{1,4} = 23;
 CurrentConsumption{1,5} = 940;
-CurrentConsumption{1,6} = 512;
+CurrentConsumption{1,6} = 613;
 CurrentConsumption{1,7} = 250;
 CurrentConsumption{1,8} = 586;
 
@@ -185,13 +185,13 @@ end
 
 %% Amounts of Fuels
 
-RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crude Oil Import'};
+RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crude Oil Import', 'Crude Oil Products - For Energy' };
 ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleum Gas', 'Other'};
 
 AmountsOfFuelsCells = Data.AmountsOfFuelsCells;
 
 for i =2:Years
-    CurrentFuelConsumption = array2table(zeros(3,7),'RowNames', RowNames);
+    CurrentFuelConsumption = array2table(zeros(4,7),'RowNames', RowNames);
     CurrentFuelConsumption.Properties.VariableNames = ColNames;
     CurrentFuelConsumption{:,:} = AmountsOfFuelsCells{1}{:,:}*PrecentegeByTheYears(i);
     AmountsOfFuelsCells{i} = CurrentFuelConsumption;
