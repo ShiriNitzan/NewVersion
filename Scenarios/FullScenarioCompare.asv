@@ -238,10 +238,11 @@ end
 ElectricityBySources = array2table(zeros(7,Years));
 ElectricityBySources.Properties.RowNames = {'KWh From Coal', 'KWh From Natural Gas', 'KWh From Renewable Energies', 'KWh From Soler', 'KWh From Mazut', 'KWh From Waste Incinaration', 'Total'};
 ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
-
 addKWHfromIndustry = array2table(zeros(1,Years));
 for i=1:Years
     if i >= 2
+        a = sum(AmountsOfFuelsCells{1,i}{4,:});
+        b = sum(AmountsOfFuelsCells{1,i-1}{4,:});
         addKWHfromIndustry{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
         ElectricityConsumptionTable{3,i} = ElectricityConsumptionTable{3,i} + (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
     end
@@ -350,7 +351,7 @@ for i = 2:Years
 end
 %% Create Final Table
 
-RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Fuel for Industry', 'Sewege Treatment'};
+RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment'};
 EmissionsByYears = cell2table(EmissionsByYears, 'RowNames', RowNames);
 EmissionsByYears.Properties.VariableNames = YearsStringsForColNames;
 

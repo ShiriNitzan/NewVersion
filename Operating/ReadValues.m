@@ -110,7 +110,7 @@ DataBase.AmountsOfFuelsCells{1} = array2table(zeros(4,7),'RowNames', RowNames);
 DataBase.AmountsOfFuelsCells{1}{1,:} = table2array(readtable(Data,'Sheet','Materials','Range','P45:V45','ReadVariableNames',false));
 DataBase.AmountsOfFuelsCells{1}{2,:} = table2array(readtable(Data,'Sheet','Materials','Range','P49:V49','ReadVariableNames',false));
 DataBase.AmountsOfFuelsCells{1}{3,:} = table2array(readtable(Data,'Sheet','Materials','Range','P57:V57','ReadVariableNames',false));
-DataBase.AmountsOfFuelsCells{1}{1,:} = table2array(readtable(Data,'Sheet','Materials','Range','P41:V41','ReadVariableNames',false));
+DataBase.AmountsOfFuelsCells{1}{4,:} = table2array(readtable(Data,'Sheet','Materials','Range','P41:V41','ReadVariableNames',false));
 ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleum Gas', 'Other'};
 DataBase.AmountsOfFuelsCells{1}.Properties.VariableNames = ColNames;
 

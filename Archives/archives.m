@@ -28,6 +28,33 @@ list = {'Manual Input','Only One Step','All But One',...
 a = listdlg('PromptString',{'Choose one of the scenarios and follow the instructions.',''},...
     'Name','Select a scenario',...
     'SelectionMode','single','ListString',list);
+%% 
+
+for i =2:Years 
+    CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
+    CurrentConsumption{1,1} = pop{3,i}*110.452; % Water for Domestic & Industrial
+    CurrentConsumption{1,2} = pop{3,i}*waterData{1,i}; % for agriculture
+    CurrentConsumption{1,3} = pop{4,i}*20.31282+90; % Water for Neighbors
+    CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
+    CurrentConsumption{1,5} = waterData{3,i}; %% natural from
+    CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
+    CurrentConsumption{1,7} = 250; %% Brackish water, fresh and non-fresh reservoir water
+    CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
+    if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
+        CurrentConsumption{1,1} = 1070;
+        CurrentConsumption{1,2} = 1300;
+        CurrentConsumption{1,3} = 190;
+        CurrentConsumption{1,4} = 25;
+        CurrentConsumption{1,5} = 1080;
+        CurrentConsumption{1,6} = 636;
+        CurrentConsumption{1,7} = 250;
+        CurrentConsumption{1,8} = 524;  
+    end
+   
+    WaterConsumptionCell{i} =  CurrentConsumption;
+end
+
+
 %% results
 ScenariosNames = {'Population Growth', 'Electricity Saving Scenario', 'Increase in Diselinated Water', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Change In Energy Consumption From Renewable Energies', 'Electricity Production by Natural Gas','Electricity Saving', 'Waste Minimization','Recycle Waste', '11', '12', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving'};
 

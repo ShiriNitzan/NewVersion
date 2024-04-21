@@ -9,7 +9,7 @@ PreventingFoodLoss = ScenariosTable{5,:};
 IncreaseInEnergyConsumptionFromRenewableEnergiesPercentage = ScenariosTable{6,:};
 IncreaseInEnergyConsumptionFromNaturalGasPercentage  = ScenariosTable{7,:};
 ElectricitySavingPercentage = ScenariosTable{8,:};
-WasteMinimazation = ScenariosTable{9,:};
+FuelForEnergyPercentage = ScenariosTable{9,:};
 RecycleWaste = ScenariosTable{10,:};
 BurningWaste = ScenariosTable{11,:};
 ReductionOfMileage = ScenariosTable{12,:};
@@ -26,14 +26,19 @@ WaterSaving = ScenariosTable{19,:};
 EmissionsByYears = cell(10,Years);
 ConsumptionAmounts = cell(5,Years);
 addpath("CalcFunctions");
-ConsumptionChangesTable = PopulationGrowthPercentage;
-[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell,AmountsOfFuelsCells, OrganicWasteCell] = ConsumptionChanges(Data,ConsumptionChangesTable, Years,pop,orderIndex);
+%ConsumptionChangesTable = PopulationGrowthPercentage;
+[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell,AmountsOfFuelsCells, OrganicWasteCell] = ConsumptionChanges(Data,ScenariosTable, Years,pop,orderIndex);
 
 YearsStringsForColNames = cell(1,Years);
 for i=1:Years
     s1 = num2str(i+2016);
     YearsStringsForColNames{i} = s1;
 end
+%% Fuel for energy in the industry
+ for i=1:Years 
+   ConsumptionAmounts{5,i} = array2table(AmountsOfFuelsCells{1,i}{4,:}); % data transfer
+   EmissionsByYears{9,i} =   array2table(ConsumptionAmounts{5,i}{:,:}*2.5); %Calculation of emissions according to Raziel's coefficient
+ end
 %% Food Emissions & Food Resource Consumption - scenario 4
 
 WaterFromFoodCell = cell(1,Years);
@@ -205,7 +210,7 @@ for i=1:Years
     CurrentWaste = WasteAndRecyclingCell{i};
     for j = 1:height(WasteAndRecyclingCell{i})
         for k =1:width(CurrentWaste)
-            CurrentWaste{j,k} = WasteMinimazation(i)*CurrentWaste{j,k};
+           % CurrentWaste{j,k} = WasteMinimazation(i)*CurrentWaste{j,k};
         end
     end
     WasteAndRecyclingCell{i} = CurrentWaste;
@@ -243,7 +248,12 @@ ElectricityBySources = array2table(zeros(7,Years));
 ElectricityBySources.Properties.RowNames = {'KWh From Coal', 'KWh From Natural Gas', 'KWh From Renewable Energies', 'KWh From Soler', 'KWh From Mazut', 'KWh From Waste Incinaration', 'Total'};
 ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 
+addKWHfromIndustry = array2table(zeros(1,Years));
 for i=1:Years
+    if i >= 2
+        addKWHfromIndustry{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
+        ElectricityConsumptionTable{3,i} = ElectricityConsumptionTable{3,i} + (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
+    end
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};
     TotalElectricityFromWater = CurrentElectricityFromWater{6,1};
@@ -356,11 +366,11 @@ for i = 2:Years
 end
 %% Create Final Table
 
-RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment'}; %, 'Water from food'
+RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Fuel for Industry', 'Sewege Treatment'}; %, 'Water from food'
 EmissionsByYears = cell2table(EmissionsByYears, 'RowNames', RowNames);
 EmissionsByYears.Properties.VariableNames = YearsStringsForColNames;
 
-RowNames = {'Water', 'Fuels For Electriciy Manufacturing', 'Fuels For Transportation Amounts', 'Materials For Construction', 'Fuels For Energy'};
+RowNames = {'Water', 'Fuels For Electriciy Manufacturing', 'Fuels For Transportation Amounts', 'Materials For Construction', 'Fuels For Energy Industry'};
 ConsumptionAmounts = cell2table(ConsumptionAmounts, 'RowNames', RowNames);
 ConsumptionAmounts.Properties.VariableNames = YearsStringsForColNames;
 

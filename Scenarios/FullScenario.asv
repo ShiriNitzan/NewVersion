@@ -1,5 +1,4 @@
-function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenarioCompare(Data,ScenariosTable,Years,pop,WaterFromFood1,orderIndex)
-%The difference between the second FULLSENARIO function is that here we make comparisons with the results we got earlier
+function [EmissionsByYears,ConsumptionAmounts, Resources, WaterFromFoodCell] = FullScenario(Data,ScenariosTable,Years,pop,orderIndex, index)
 %% Cut Vectors from Scenarios Table
 
 PopulationGrowthPercentage = ScenariosTable{1,:};
@@ -10,7 +9,7 @@ PreventingFoodLoss = ScenariosTable{5,:};
 IncreaseInEnergyConsumptionFromRenewableEnergiesPercentage = ScenariosTable{6,:};
 IncreaseInEnergyConsumptionFromNaturalGasPercentage  = ScenariosTable{7,:};
 ElectricitySavingPercentage = ScenariosTable{8,:};
-WasteMinimazation = ScenariosTable{9,:};
+FuelForEnergyPercentage = ScenariosTable{9,:};
 RecycleWaste = ScenariosTable{10,:};
 BurningWaste = ScenariosTable{11,:};
 ReductionOfMileage = ScenariosTable{12,:};
@@ -28,7 +27,7 @@ EmissionsByYears = cell(10,Years);
 ConsumptionAmounts = cell(5,Years);
 addpath("CalcFunctions");
 %ConsumptionChangesTable = PopulationGrowthPercentage;
-[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell,AmountsOfFuelsCells, OrganicWasteCell] = ConsumptionChanges(Data, ScenariosTable, Years,pop,orderIndex);
+[ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell,AmountsOfFuelsCells, OrganicWasteCell] = ConsumptionChanges(Data,ScenariosTable, Years,pop,orderIndex);
 
 YearsStringsForColNames = cell(1,Years);
 for i=1:Years
@@ -39,35 +38,37 @@ end
  for i=1:Years 
    ConsumptionAmounts{5,i} = array2table(AmountsOfFuelsCells{1,i}{4,:});
    EmissionsByYears{9,i} =   array2table(ConsumptionAmounts{5,i}{:,:}*2.5);
+
  end
 %% Food Emissions & Food Resource Consumption - scenario 4
 
 WaterFromFoodCell = cell(1,Years);
 CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5;
 
+
 for i=1:Years
     CurrentFoodConsumption = FoodConsumptionCell{i};
-    CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
-    CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
-    for j = 10:14
-        CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
-        CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
-    end    
-    for j = 1:width(CurrentFoodConsumption)
-        CurrentFoodConsumption{:,j} = CurrentFoodConsumption{:,j}.*PreventingFoodLoss(i);
+    if (index == 4 || index == 5 && orderIndex == 2 ) || (orderIndex ~= 2)
+        CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
+        CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
+        for j = 10:14
+            CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
+            CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
+        end    
+        for j = 1:width(CurrentFoodConsumption)
+            CurrentFoodConsumption{:,j} = CurrentFoodConsumption{:,j}.*PreventingFoodLoss(i);
+        end
     end
+   
+
     WaterFromFoodCell{i} = CalcWaterForFoodConsumption(Data, CurrentFoodConsumption);
     EmissionsFromFood = CalcCo2eFromFoodConsumption(Data, CurrentFoodConsumption, OrganicWasteCell{i});
+    %EmissionsFromWaterToGlobalFood = sum(WaterFromFoodCell{i}{1,3:4})*(0.4+0.2+0.51)*10^6;
     EmissionsByYears{1,i} = EmissionsFromFood;
+    %EmissionsByYears{11,i} = EmissionsFromWaterToGlobalFood ;
     FoodConsumptionCell{i} = CurrentFoodConsumption;
+end
 
-    % Calculates the difference of the results obtained for reducing food use in B.A.U compared to the results obtained in this case (advanced/moderate)
-    BAUResult = WaterFromFood1{i}; 
-    A =  sum(BAUResult{1,1:2})/10^6;
-    B =  sum(WaterFromFoodCell{i}{1,1:2})/10^6;
-    gap = A-B;
-    WaterConsumptionCell{i}{1,8} =  WaterConsumptionCell{i}{1,8} - gap ;
- end 
 
 %% Water Emissions
 
@@ -75,6 +76,17 @@ for i = 1:Years
     EmmisionsFromSewegeTreatment = CalcSewegeEmissions(Data, WaterConsumptionCell{i});
     EmissionsByYears{10,i} = EmmisionsFromSewegeTreatment;
 end
+
+%% { change in diselinated water consumption - scenario 3  - not useful, need to be change
+
+%{
+for i =1:Years
+    DiselinatedWaterConsumption = WaterConsumptionCell{i}{:,2};
+    DiselinatedWaterConsumption = DiselinatedWaterConsumption*IncreaseInDiselinatedWater(i);
+    WaterConsumptionCell{i}{:,2} = DiselinatedWaterConsumption;
+end ConsumptionAmounts{1
+%}
+
 
 %% water saving - scenario 19
 for i=1:Years
@@ -85,13 +97,11 @@ end
 
 for i = 1:Years
     CurrentWater = WaterConsumptionCell{1,i};
-    %CurrentWater = ConsumptionAmounts{1,i};
     NewCurrentWater = array2table(zeros(height(CurrentWater)+1,width(CurrentWater)));
     NewCurrentWater{1:height(NewCurrentWater)-1,:} = CurrentWater{:,:};
     NewCurrentWater.Properties.VariableNames = CurrentWater.Properties.VariableNames;
     for j = 1:width(NewCurrentWater)
         NewCurrentWater{1,j} = sum(NewCurrentWater{1,j});
-       % NewCurrentWater{height(NewCurrentWater),j} = sum(NewCurrentWater{1:6,j});
     end
    
     %NewCurrentWater{:,:} = NewCurrentWater{:,:}/1000000;%% m^3 * 10^6
@@ -239,19 +249,17 @@ ElectricityBySources = array2table(zeros(7,Years));
 ElectricityBySources.Properties.RowNames = {'KWh From Coal', 'KWh From Natural Gas', 'KWh From Renewable Energies', 'KWh From Soler', 'KWh From Mazut', 'KWh From Waste Incinaration', 'Total'};
 ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 
-addKWHfromIndustry = array2table(zeros(1,Years));
+
 for i=1:Years
-    if i >= 2
-        addKWHfromIndustry{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
-        ElectricityConsumptionTable{3,i} = ElectricityConsumptionTable{3,i} + (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
-    end
+    ElectricityConsumptionTable{3,i} = ElectricityConsumptionTable{3,i} + (AmountsOfFuelsCells{1,i+1}{4,:} - AmountsOfFuelsCells{1,i}{4,:})*11630*1000;
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};
     TotalElectricityFromWater = CurrentElectricityFromWater{6,1};
-    CurrentYearElectricity(6) = TotalElectricityFromWater*Data.ElectricityLossRatio;
+    CurrentYearElectricity(6) = TotalElectricityFromWater;
+    CurrentYearElectricity(7,1) = sum(WaterFromFoodCell{1,i}{1,3:4})*(0.51+0.4); % The amount of water for global food per cubic meter is twice the electricity coefficients for global water in KWH per cubic meter. The electricity coefficient discount is for producing and transporting fresh water
     ElectricityConsumptionTable{6,i} = CurrentYearElectricity(6);
-    CurrentYearElectricity(7,1) = sum(WaterFromFoodCell{1,i}{1,3:4})*(0.51+0.4);
     [EmissionsByYears{2,i}, ElectricityBySources{1:6,i}] = CalcElectricityConsumption(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i},WasteInciniration(i));
+
     [EmissionsByYears{3,i},ConsumptionAmounts{2,i}] = CalcElectricityManufacturing(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i});
     ElectricityBySources{7,i} = sum(ElectricityBySources{1:6,i});
 end
@@ -291,7 +299,7 @@ for i = 2:Years
         if (DeltaKW{j,i}) < 0
             DeltaKW{j,i} = 0;
         end
-    end    
+    end  
     %}
 end
 
@@ -300,9 +308,12 @@ DeltaKW.Properties.VariableNames = YearsStringsForColNames;
 TotalArea = 0;
 for i = 1:Years
     CurrentAreaCoefficient = Data.AreaForSolarEnergyCoefficients{i,:}; % AreaForSolarEnergyCoefficients need a re-name
-    AreaForElectricity = CalcAreaForElectricity(DeltaKW{:,i}, CurrentAreaCoefficient, RenewableDistribution, Data.AreaDistribution{:,3});
+   AreaForElectricity = CalcAreaForElectricity(DeltaKW{:,i}, CurrentAreaCoefficient, RenewableDistribution, Data.AreaDistribution{:,3});
+    %AreaForElectricity = CalcAreaForElectricity(KWForElectricity{:,i}, CurrentAreaCoefficient, RenewableDistribution, Data.AreaDistribution{:,3});
     AreaForElectricity{:,:} = AreaForElectricity{:,:}/1000;%% km^2
-    Resources{1,i} = AreaForElectricity;
+   
+    Resources{1,i} = AreaForElectricity; 
+    
     TotalArea = sum(AreaForElectricity{1,:}) + TotalArea;
     Resources{2,i} = TotalArea;
 end
@@ -328,29 +339,32 @@ end
 
 %%Setting Costs
 for i = 1:Years
-    Resources{5,i} = CalcSettingCosts(KWForElectricity{:,i}, Data.SettingCosts{i,:});
-    %Resources{5,i} = CalcSettingCosts(DeltaKW{:,i}, Data.SettingCosts{i,:});
+     Resources{5,i} = CalcSettingCosts(KWForElectricity{:,i}, Data.SettingCosts{i,:});
+   % Resources{5,i} = CalcSettingCosts(DeltaKW{:,i}, Data.SettingCosts{i,:});
 end
 
-% cost of fuels
+% cost of Fuels For Electriciy Manufacturing ONLY, not include transportation
 for i = 1:Years
     Resources{6,i} = CalcFuelCosts(ConsumptionAmounts{2,i}{1,:},ConsumptionAmounts{3,i}{1,:}, Data.ILSPerTon{:,1}, Data.ILSPerTon{:,3});
-    %Resources{6,i} = CalcFuelCosts(ConsumptionAmounts{2,i}{1,1:2}, Data.ILSPerTon{:,1});
 end
 
 % cost of area
 for i = 1:Years
-     Resources{7,i} = CalcCostOfArea(Resources{1,i}{:,3:7}, Data.AreaCostForElectricity{i,:});
+     Resources{7,i} = CalcCostOfArea(Resources{1,i}{1,3:7}, Data.AreaCostForElectricity{i,:});
 end
 %% Construction area 
 InitBuiltArea = Data.TotalBuiltArea;
 Resources{8,1} = InitBuiltArea;
 for i = 2:Years
+    if (orderIndex == 2 && ConstructionTable{height(ConstructionTable),1} ~= ConstructionTable{height(ConstructionTable),width(ConstructionTable)}) || orderIndex ~= 2
      Resources{8,i} = ConstructionTable{height(ConstructionTable),i}/1000 + Resources{8,i-1};
+    else
+            Resources{8,i} = InitBuiltArea;
+    end
 end
 %% Create Final Table
 
-RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Fuel for Industry', 'Sewege Treatment'};
+RowNames = {'Food', 'Electricity - Direct', 'Electricity - Indirect', 'Transportation - Direct', 'Train Emissions','Transportation - Indirect', 'Construction', 'Consumption Emissions' ,'Emissions From Crude Oil Byproducts (Materials)', 'Sewege Treatment'}; %, 'Water from food'
 EmissionsByYears = cell2table(EmissionsByYears, 'RowNames', RowNames);
 EmissionsByYears.Properties.VariableNames = YearsStringsForColNames;
 
@@ -367,10 +381,10 @@ Resources.Properties.VariableNames = YearsStringsForColNames;
 %% Other Functions
 
 function ElectricityFromWater = CalculateElectricityFromWaterAllYears(Data, WaterConsumptionCell, Years) %% in data file - needs to multiply the electricity by 1.18336
-ElectricityFromWater = cell(1,Years);
-for i=1:Years
-    ElectricityFromWater{i} = CalcElectricityForWater(Data, WaterConsumptionCell{i}, Data.ElectricityConsumptionCoefficients{:,i});
-end
+    ElectricityFromWater = cell(1,Years);
+    for i=1:Years
+        ElectricityFromWater{i} = CalcElectricityForWater(Data, WaterConsumptionCell{i}, Data.ElectricityConsumptionCoefficients{:,i});
+    end
 end
 
 function PercentageByYears = CalculatePercentageOfElectricitySourcesByYears(RenewableEnergiesPercentage, NaturalGasPercentage, Percentage)
