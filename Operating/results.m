@@ -230,8 +230,9 @@ b = bar(x, y, 'stacked');
 for i = 1:numel(b)
     set(b(i), 'FaceColor', colors2Area(i, :));
 end
-ylim([0 70000])
-title('Area', 'FontSize',14,'Position', [2.5, 71296, 0]);
+% ** CHANGED **
+ylim([0 85000])
+title('Area', 'FontSize',14,'Position', [2.5, 86296, 0]);
 xticklabels(Order);
 xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);

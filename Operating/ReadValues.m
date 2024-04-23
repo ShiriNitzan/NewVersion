@@ -7,7 +7,7 @@ addpath("Data");
 Data = "Data.xlsx";
 DataBase = struct;
 
-%% Electricity Consumption
+%% Electricity Consumption - UPDATED 
 RowNames = {'Home', 'Public & Commercial', 'Industrial', 'Other', 'Transportation', 'Water Supply and Seweage Treatment', 'Total'};
 DataBase.ElectricityConsumptionTable = array2table(zeros(7, Years),'RowNames',RowNames);
 ColumnNames = cell(1,Years);
@@ -18,6 +18,9 @@ for i=1:Years
 end
 DataBase.ElectricityConsumptionTable.Properties.VariableNames = cellstr(ColumnNames);
 DataBase.ElectricityConsumptionTable{1:6, 1} = table2array(readtable(Data,'Sheet','ElectricityConsumption','Range','B3:B8','ReadVariableNames',false));
+
+IndustryElectricityConsumptionChange = readtable(Data,'Sheet','ElectricityConsumption','Range','R5:R5','ReadVariableNames',false);
+DataBase.IndustryElectricityConsumptionChange = IndustryElectricityConsumptionChange{1,1};
 
 ElectricityLossRatio = readtable(Data,'Sheet','ElectricityConsumption','Range','B17:B17','ReadVariableNames',false);
 DataBase.ElectricityLossRatio = ElectricityLossRatio{1,1};
@@ -51,16 +54,27 @@ ColNames = {'Humans and Other - Local','Animals - Local','Humans and Others - Im
 DataBase.FoodConsumptionCell{1}.Properties.VariableNames = ColNames;
 DataBase.FoodRowName = table2cell(readtable(Data,'Sheet','Food','Range','A5:A68','ReadVariableNames',false))';
 
+% the maximal value possible in order to keep the area for food in Israel under 4500000 m^2.
+TotalGrowthForLocalFood = readtable(Data,'Sheet','Food','Range','AJ3:AJ3','ReadVariableNames',false);
+DataBase.TotalGrowthForLocalFood = TotalGrowthForLocalFood{1,1};
 %% water consumption
 DataBase.WaterConsumptionCell = cell(1,Years);
 RowNames = {'Agriculture', 'Marginal Water Percentage', 'Home Consumption(Urban)', 'Industry', 'Water for Nature', 'Water for Neighbors'};
 DataBase.WaterConsumptionCell{1} = array2table(zeros(6,5), 'RowNames', RowNames);
 DataBase.WaterConsumptionCell{1}{:,3:5} = table2array(readtable(Data,'Sheet','Water','Range','F12:H17','ReadVariableNames',false));
+% choosing brakish, treated water water and flood of 2017.
+
 DataBase.DrinkingWater = table2array(readtable(Data,'Sheet','Water','Range','E12:E17','ReadVariableNames',false));
+% choosing drinking water for all purpuses.
+
 DiselinatedWaterPercntage = readtable(Data,'Sheet','Water','Range','N44:N44','ReadVariableNames',false);
+% precentage of desalinated from all SHAFIRIM
+
 DataBase.DiselinatedWaterPercntage = DiselinatedWaterPercntage{1,1};
 DiselinatedWaterPercntage = DiselinatedWaterPercntage{1,1};
 DataBase.WaterConsumptionCell{1}{:,1} = DataBase.DrinkingWater*(1-DiselinatedWaterPercntage);
+% the total water from nature is all the drinkingWater X precentage of not desalinated
+
 DataBase.WaterConsumptionCell{1}{:,2} = DataBase.DrinkingWater*DiselinatedWaterPercntage;
 DataBase.WaterConsumptionCell{1}{5,1} = DataBase.WaterConsumptionCell{1}{5,1}+DataBase.WaterConsumptionCell{1}{5,2};
 DataBase.WaterConsumptionCell{1}{5,2} = 0;
@@ -163,7 +177,7 @@ DataBase.UrbanConsumptionPercentages = table2array(readtable(Data,'Sheet','Water
 DataBase.RatioForBrackishWater = table2array(readtable(Data,'Sheet','Water','Range','P23:Q23','ReadVariableNames',false));
 
 %% Calc electricity manufacturing
-
+DataBase.EmissionsCoefficientsForPv = readtable(Data,'Sheet','PVEmissions','Range','I8:J42','ReadVariableNames',true);
 DataBase.EmissionsCoefficientsUpstreamElectricity = table2array(readtable(Data,'Sheet','ElectricityManufactureEmissions','Range','B37:G43','ReadVariableNames',false))';
 DataBase.ElectrictyManufacturingCoefficients = table2array(readtable(Data,'Sheet','ElectricityManufactureEmissions','Range','B33:E33','ReadVariableNames',false));
 CrudeOilToFuelRatio = readtable(Data,'Sheet','ElectricityManufactureEmissions','Range','R28:R28','ReadVariableNames',false);

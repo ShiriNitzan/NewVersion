@@ -239,6 +239,7 @@ ElectricityBySources = array2table(zeros(7,Years));
 ElectricityBySources.Properties.RowNames = {'KWh From Coal', 'KWh From Natural Gas', 'KWh From Renewable Energies', 'KWh From Soler', 'KWh From Mazut', 'KWh From Waste Incinaration', 'Total'};
 ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 
+PreviousYearElectricity = ElectricityBySources{:,1}; %tables of zeros- for the first iteration.
 addKWHfromIndustry = array2table(zeros(1,Years));
 for i=1:Years
     if i >= 2
@@ -248,14 +249,21 @@ for i=1:Years
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};
     TotalElectricityFromWater = CurrentElectricityFromWater{6,1};
-    CurrentYearElectricity(6) = TotalElectricityFromWater*Data.ElectricityLossRatio;
+    CurrentYearElectricity(6) = TotalElectricityFromWater;
+    CurrentYearElectricity(7,1) = sum(WaterFromFoodCell{1,i}{1,3:4})*(0.51+0.4); 
+    % The amount of water for global food per cubic meter is twice the electricity coefficients for global water in KWH per cubic meter.
+    % The electricity coefficient discount is for producing and transporting fresh water
     ElectricityConsumptionTable{6,i} = CurrentYearElectricity(6);
-    CurrentYearElectricity(7,1) = sum(WaterFromFoodCell{1,i}{1,3:4})*(0.51+0.4);
     [EmissionsByYears{2,i}, ElectricityBySources{1:6,i}] = CalcElectricityConsumption(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i},WasteInciniration(i));
-    [EmissionsByYears{3,i},ConsumptionAmounts{2,i}] = CalcElectricityManufacturing(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i});
-    ElectricityBySources{7,i} = sum(ElectricityBySources{1:6,i});
-end
 
+    % Shiri's Adjustments: allowing changes in PV emissions - sending the
+    % function the consumption of the prev year in order to find the delta,and the year (i) so we can calculate the current emissions
+    [EmissionsByYears{3,i},ConsumptionAmounts{2,i}] = CalcElectricityManufacturing(Data, CurrentYearElectricity, PreviousYearElectricity, PercentageOfElectricitySourcesByYears{:,:}, i);
+    
+    ElectricityBySources{7,i} = sum(ElectricityBySources{1:6,i});
+    PreviousYearElectricity = CurrentYearElectricity; % updating for the next iteration
+
+end
 
 %% emissions from consumption - on hold until further analysis
 % WasteAndRecyclingSummaryCell = cell(1,Years);

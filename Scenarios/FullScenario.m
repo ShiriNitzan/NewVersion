@@ -28,7 +28,9 @@ ConsumptionAmounts = cell(5,Years);
 addpath("CalcFunctions");
 %ConsumptionChangesTable = PopulationGrowthPercentage;
 [ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WasteAndRecyclingCell,AmountsOfFuelsCells, OrganicWasteCell] = ConsumptionChanges(Data,ScenariosTable, Years,pop,orderIndex);
-
+% returns all these tables based only on population growath/ some coefficient*population growth,
+% (all the other factors aren't taken into account).
+ 
 YearsStringsForColNames = cell(1,Years);
 for i=1:Years
     s1 = num2str(i+2016);
@@ -40,6 +42,8 @@ end
    EmissionsByYears{9,i} =   array2table(ConsumptionAmounts{5,i}{:,:}*2.5); %Calculation of emissions according to Raziel's coefficient
  end
 %% Food Emissions & Food Resource Consumption - scenario 4
+% When reducing beef consumption, we considered a replacement by other food products.
+% the calories will be divided equally among the legumes (bean, chickpea, lentil, broad bean and green pea).
 
 WaterFromFoodCell = cell(1,Years);
 CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5;
@@ -89,6 +93,8 @@ end ConsumptionAmounts{1
 
 %% water saving - scenario 19
 for i=1:Years
+    % WaterConsumptionCell is calculated by ConsumptionChanges(),based on population growth only.
+    % updates the tables of water consumption based on savings precentage per year.
     CurrentWaterConsumption = WaterConsumptionCell{i}{:,:}*WaterSaving(i);
     WaterConsumptionCell{i}{:,:} = CurrentWaterConsumption;
     ConsumptionAmounts{1,i} = WaterConsumptionCell{i};
@@ -142,13 +148,15 @@ KWHForElectricTruck = zeros(1,Years);
 KWHForElectricBus = zeros(1,Years);
 KMTraveledByElectricCar = zeros(1,Years);
 
-for i = 1:Years    
+for i = 1:Years  
+    % chnging the annual travel of each regular vehicle base on the
+    % tranistion to electric one (the precentage vector of tranisition is given in the scenario)
     [KMTraveledByElectricCar(i), TransportationConsumptionTable{2,i}] = CalcTransitionToEV(TransportationConsumptionTable{2,i},TransitionToElectricCar(i));
     [KMTraveledByElectricVan, TransportationConsumptionTable{6,i}] = CalcTransitionToEV(TransportationConsumptionTable{6,i},TransitionToElectricVan(i));
     [KMTraveledByElectricTruck, TransportationConsumptionTable{5,i}] = CalcTransitionToEV(TransportationConsumptionTable{5,i},TransitionToElectricTruck(i));
     [KMTraveledByElectricBus, TransportationConsumptionTable{1,i}] = CalcTransitionToEV(TransportationConsumptionTable{1,i},TransitionToElectricBus(i));
     
-    % electricity consumption from ev
+    % electricity consumption from ev = total KM the vehicle drived X the coefficint of KWh for km. consumption = (0.215, 0.9, 1.2, 1.2). )
     KWHForElectricCar(i) = (KMTraveledByElectricCar(i))*ElectricityConsumptionEmissionsInTransportation{1,i};
     KWHForElectricVan(i) = (KMTraveledByElectricVan)*ElectricityConsumptionEmissionsInTransportation{2,i};
     KWHForElectricTruck(i) = (KMTraveledByElectricTruck)*ElectricityConsumptionEmissionsInTransportation{3,i};
@@ -248,6 +256,8 @@ ElectricityBySources = array2table(zeros(7,Years));
 ElectricityBySources.Properties.RowNames = {'KWh From Coal', 'KWh From Natural Gas', 'KWh From Renewable Energies', 'KWh From Soler', 'KWh From Mazut', 'KWh From Waste Incinaration', 'Total'};
 ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 
+PreviousYearElectricity = ElectricityBySources{:,1}; %tables of zeros- for the first iteration.
+
 addKWHfromIndustry = array2table(zeros(1,Years));
 for i=1:Years
     if i >= 2
@@ -258,12 +268,19 @@ for i=1:Years
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};
     TotalElectricityFromWater = CurrentElectricityFromWater{6,1};
     CurrentYearElectricity(6) = TotalElectricityFromWater;
-    CurrentYearElectricity(7,1) = sum(WaterFromFoodCell{1,i}{1,3:4})*(0.51+0.4); % The amount of water for global food per cubic meter is twice the electricity coefficients for global water in KWH per cubic meter. The electricity coefficient discount is for producing and transporting fresh water
+    CurrentYearElectricity(7,1) = sum(WaterFromFoodCell{1,i}{1,3:4})*(0.51+0.4); 
+    % The amount of water for global food per cubic meter is twice the electricity coefficients for global water in KWH per cubic meter.
+    % The electricity coefficient discount is for producing and transporting fresh water
     ElectricityConsumptionTable{6,i} = CurrentYearElectricity(6);
     [EmissionsByYears{2,i}, ElectricityBySources{1:6,i}] = CalcElectricityConsumption(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i},WasteInciniration(i));
 
-    [EmissionsByYears{3,i},ConsumptionAmounts{2,i}] = CalcElectricityManufacturing(Data, CurrentYearElectricity, PercentageOfElectricitySourcesByYears{:,i});
+    % Shiri's Adjustments: allowing changes in PV emissions - sending the
+    % function the consumption of the prev year in order to find the delta,and the year (i) so we can calculate the current emissions
+    [EmissionsByYears{3,i},ConsumptionAmounts{2,i}] = CalcElectricityManufacturing(Data, CurrentYearElectricity, PreviousYearElectricity, PercentageOfElectricitySourcesByYears{:,:}, i);
+    
     ElectricityBySources{7,i} = sum(ElectricityBySources{1:6,i});
+    PreviousYearElectricity = CurrentYearElectricity; % updating for the next iteration
+
 end
 
 

@@ -1,12 +1,27 @@
  function [ElectricityConsumptionTable, TransportationConsumptionTable, VehicleAmountsCell, FoodConsumptionCell, WaterConsumptionCell, ConstructionTable,WateAndRecyclingCell, AmountsOfFuelsCells, OrganicWasteAmount] = ConsumptionChanges(Data, ScenariosTable,Years,pop,orderIndex, varargin)
+ % gets PrecentegeByTheYears as the population growth vector,
+ % gets Pop as the population amount, israel and paletinian authorith.
+ % returns all these tables based only on population growath/ some coefficient*population growth,
+ % (all the other factors arent being taken into account).
+
 %% Electricity Consumption
 p = inputParser;
 addOptional(p,'ChangesStruct', []);
 parse(p,varargin{:});
-    
+
+% NEW: Electicity that the industry consumes isnt affected by the population growth.
+
 ElectricityConsumptionTable = Data.ElectricityConsumptionTable;
+IndustryElectricityConsumptionChange = Data.IndustryElectricityConsumptionChange; % assuming industrial grow by 1.1
+ChangeInElectricityConsumptionPercentageIndustry = CalculatePercentageLinear(1, IndustryElectricityConsumptionChange, Years);
+
 for i=2:Years
-   ElectricityConsumptionTable{:, i} = ScenariosTable{1,i}*ElectricityConsumptionTable{:,1};
+  %  ElectricityConsumptionTable{:, i} = PrecentegeByTheYears(i)*ElectricityConsumptionTable{:,1};
+  ElectricityConsumptionTable{1, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{1,1}; %home
+  ElectricityConsumptionTable{2, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{2,1}; %public/commercial
+  ElectricityConsumptionTable{4, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{4,1}; %other
+  ElectricityConsumptionTable{3, i} = ChangeInElectricityConsumptionPercentageIndustry(i) * ElectricityConsumptionTable{3,1}; %industrial
+
 end
 
 %% Transportation Consumption
@@ -28,18 +43,38 @@ for i = 1:Years
     CurrentAmount.Properties.VariableNames = ColNames;
     VehicleAmountsCell{i} =  CurrentAmount;
 end
+
 %% Food Consumption
+% assuming perfect corrrelation between population growth and food consumption.
 FoodConsumptionCell = Data.FoodConsumptionCell;
+% 1X34 cell, each one conatains a table of consumption for the relevant year.
 RowNames = Data.FoodRowName;
 ColNames = {'Humans and Other - Local','Animals - Local','Humans and Others - Import','Animals - Import'};
-Initialization = FoodConsumptionCell{1}{:,:};
+Initialization = FoodConsumptionCell{1}{:,:}; % data of 2017
+
+% SHIRI'S UPDATE:
+% adding upper-bound to the growth of local consumption due to area limitation.
+UpperBound = Data.TotalGrowthForLocalFood;
+FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(ScenariosTable, UpperBound, Years);
+FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years);
 
 for i = 1:Years
     CurrentConsumption = array2table(zeros(64,4), 'RowNames', RowNames);
-    CurrentConsumption{:,:} = Initialization*(ScenariosTable{1,i});
+    CurrentConsumption{:,1} = Initialization(:,1)*(FoodPercentegeByTheYearsLocal(i));
+    CurrentConsumption{:,2} = Initialization(:,2)*(FoodPercentegeByTheYearsLocal(i));
+    CurrentConsumption{:,3} = Initialization(:,3)*(FoodPercentegeByTheYearsGlobal(i));
+    CurrentConsumption{:,4} = Initialization(:,4)*(FoodPercentegeByTheYearsGlobal(i));
     CurrentConsumption.Properties.VariableNames = ColNames;
     FoodConsumptionCell{i} =  CurrentConsumption;
 end
+
+% for i = 1:Years
+%    CurrentConsumption = array2table(zeros(64,4), 'RowNames', RowNames);
+%    CurrentConsumption{:,:} = Initialization*(PrecentegeByTheYears(i));
+%    CurrentConsumption.Properties.VariableNames = ColNames;
+%    FoodConsumptionCell{i} =  CurrentConsumption;
+% end
+
 %% Water model pre-data 
 waterData  = array2table(zeros(3,34));
 RowNames = {'Agriculture per capita', 'Water for nature', 'Drilling Water'};
@@ -310,4 +345,38 @@ for i = 1:length(MileStoneVector)
 end
 end
 
+ end
+
+ %% OTHER FUNCTIONS:
+
+ function LinearPercentageVector = CalculatePercentageLinear(StartValue, EndValue, Years)
+    step = (EndValue - StartValue) / (Years - 1);
+    LinearPercentageVector = zeros(1, Years);
+    for i = 1:Years
+        LinearPercentageVector(i) = StartValue + (i - 1) * step;
+    end
 end
+
+function FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(ScenariosTable, UpperBound, Years)
+% doesnt allow the growth vector to bigger than the defined percentae.
+    PercentegeByTheYears = ScenariosTable{1,:};
+    FoodPercentegeByTheYearsLocal = PercentegeByTheYears;
+    for i = 1:Years
+        if PercentegeByTheYears(i) > UpperBound
+           FoodPercentegeByTheYearsLocal(i) = UpperBound;
+        end
+    end
+end
+
+function FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years)
+% if there's no more available area in Israel - the growth is move overseas.
+    PercentegeByTheYears = ScenariosTable{1,:};
+    FoodPercentegeByTheYearsGlobal = PercentegeByTheYears;
+    for i = 1:Years
+        if PercentegeByTheYears(i) > UpperBound
+           DeltaArea = PercentegeByTheYears(i) - UpperBound;
+           FoodPercentegeByTheYearsGlobal(i) = FoodPercentegeByTheYearsGlobal(i) + DeltaArea;
+        end
+    end
+end
+
