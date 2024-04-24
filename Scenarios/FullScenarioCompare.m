@@ -289,6 +289,11 @@ else
     RenewableDistribution = Data.AreaDistribution.DualPV;
 end  
 
+% 70% from dual, 30% from ground:
+%GroundDist = Data.AreaDistribution.GroundPV;
+%DualDist = Data.AreaDistribution.DualPV;
+%RenewableDistribution = 0.7 * DualDist + 0.3 * GroundDist;
+
 %Electricity Installed Power
 DeltaKW = array2table(zeros(7,Years)); %% the difference in installed KW for the setting costs
 DeltaKW{:,1} = KWForElectricity{:,1};
@@ -346,9 +351,11 @@ for i = 1:Years
     %Resources{6,i} = CalcFuelCosts(ConsumptionAmounts{2,i}{1,1:2}, Data.ILSPerTon{:,1});
 end
 
-% cost of area
+% cost of area - UPDATED
+GroundDist = Data.AreaDistribution.GroundPV;
+DualDist = Data.AreaDistribution.DualPV;
 for i = 1:Years
-     Resources{7,i} = CalcCostOfArea(Resources{1,i}{:,3:7}, Data.AreaCostForElectricity{i,:});
+     Resources{7,i} = CalcCostOfArea(Resources{1,i}{1,3:4}, Data.AreaCostForElectricity{i,:}, GroundDist, DualDist);
 end
 %% Construction area 
 InitBuiltArea = Data.TotalBuiltArea;

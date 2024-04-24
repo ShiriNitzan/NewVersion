@@ -120,7 +120,7 @@ title('Cost', 'FontSize', 14,'Position', [1, 123, 0]);
 ylabel('Billion ILS', 'FontSize', 20);
 legend(flip(b), flip(CostsSum1.Properties.RowNames(1:4)), 'FontSize',10,'Location','northwest')
 
-%% emissions-area-water-base year to last year
+%% emissions-area-water-base year to last year *****
 % To be used after selecting "all steps together" 
 
 %preparations

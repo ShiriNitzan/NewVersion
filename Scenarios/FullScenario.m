@@ -327,7 +327,7 @@ DeltaKW.Properties.VariableNames = YearsStringsForColNames;
 TotalArea = 0;
 for i = 1:Years
     CurrentAreaCoefficient = Data.AreaForSolarEnergyCoefficients{i,:}; % AreaForSolarEnergyCoefficients need a re-name
-   AreaForElectricity = CalcAreaForElectricity(DeltaKW{:,i}, CurrentAreaCoefficient, RenewableDistribution, Data.AreaDistribution{:,3});
+    AreaForElectricity = CalcAreaForElectricity(DeltaKW{:,i}, CurrentAreaCoefficient, RenewableDistribution, Data.AreaDistribution{:,3});
     %AreaForElectricity = CalcAreaForElectricity(KWForElectricity{:,i}, CurrentAreaCoefficient, RenewableDistribution, Data.AreaDistribution{:,3});
     AreaForElectricity{:,:} = AreaForElectricity{:,:}/1000;%% km^2
    
@@ -367,10 +367,13 @@ for i = 1:Years
     Resources{6,i} = CalcFuelCosts(ConsumptionAmounts{2,i}{1,:},ConsumptionAmounts{3,i}{1,:}, Data.ILSPerTon{:,1}, Data.ILSPerTon{:,3});
 end
 
-% cost of area
+% cost of area - UPDATED
+GroundDist = Data.AreaDistribution.GroundPV;
+DualDist = Data.AreaDistribution.DualPV;
 for i = 1:Years
-     Resources{7,i} = CalcCostOfArea(Resources{1,i}{1,3:7}, Data.AreaCostForElectricity{i,:});
+     Resources{7,i} = CalcCostOfArea(Resources{1,i}{1,3:4}, Data.AreaCostForElectricity{i,:}, GroundDist, DualDist);
 end
+
 %% Construction area 
 InitBuiltArea = Data.TotalBuiltArea;
 Resources{8,1} = InitBuiltArea;

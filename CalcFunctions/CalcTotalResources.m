@@ -16,19 +16,28 @@ function [Area, Costs, Water] = CalcTotalResources(Resources, ConsumptionAmounts
     OperatingCostsSum = zeros(1,width(Area));
     SettingCostsSum = zeros(1,width(Area));
     AreaElectricity = zeros(1,width(Area));
+    AreaElectricityOfDualPV = zeros(1,width(Area));
+
     AreaConstruction = zeros(1,width(Area));
     PVAreaCost = zeros(1,width(Area));
     FuelCost = zeros(1,width(Area));
     for i = 1:length(OperatingCostsSum)
-        if i == 34
-            check =1 ;
-        end
+       % if i == 34
+       %    check =1 ;
+       % end
        %OperatingCostsSum(i) = Resources{4,i}{1}{6,1}/10^9;
-      %  SettingCostsSum(i) = Resources{5,i}{1}{6,1}/10^9;
-        AreaElectricity(i) = sum(Resources{1,i}{1}{1,:});
+       %SettingCostsSum(i) = Resources{5,i}{1}{6,1}/10^9;
+       %PVAreaCost(i) = sum(Resources{7,i}{1}{1,:})/10^9;
+       %FuelCost(i) = sum(Resources{6,i}{1}{:,1})/10^9;
+
+        AreaElectricity(i) = sum(Resources{1,i}{1}{1,:}) - Resources{1,i}{1}{1,4} ; % sum of area for this year minus the DUAL
+        AreaElectricityOfDualPV(i) = Resources{1,i}{1}{1,4}; % the area needed for dual PV only
+        if i > 1 % cumulative sum
+            AreaElectricity(i) = AreaElectricity(i) + AreaElectricity(i-1);
+            AreaElectricityOfDualPV(i) = AreaElectricityOfDualPV(i) + AreaElectricityOfDualPV(i-1);
+        end
         AreaConstruction(i) = Resources{8,i}{1};
-       % PVAreaCost(i) = sum(Resources{7,i}{1}{1,:})/10^9;
-        %FuelCost(i) = sum(Resources{6,i}{1}{:,1})/10^9;
+
     end
 
 
