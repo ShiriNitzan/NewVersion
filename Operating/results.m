@@ -12,15 +12,16 @@ NoPolicy = CalcUpDownStream(EmissionsByYearsTest1);
 
 colors1Em = [
    0.72, 0.27, 1.0; 
-    0.49, 0.18, 0.56; 
+    0.49, 0.18, 0.56;  
     0.93, 0.69, 0.13;  
-    0.51, 0.37, 0.01; 
+    0.51, 0.37, 0.01;  
     0.29, 0.89, 0.69;  
     0.47, 0.67, 0.19;  
     0.85, 0.33, 0.1;  
     0.64, 0.08, 0.18;  
     0.3, 0.75, 0.93;  
     0, 0.45, 0.74;
+    0, 1, 0.74;
 ];
 
 colors2Area = [
@@ -46,7 +47,7 @@ colors4Cost = [
 ];
 
 Order = {'All Sectors'};
-y = [NoPolicy{1:10,1}];
+y = [NoPolicy{1:11,1}];
 y = y';
 x = categorical({'All Sectors'});
 x = reordercats(x, Order);
@@ -59,7 +60,7 @@ end
 ylim([0 120])
 title('Emissions', 'FontSize', 14,'Position', [1, 123, 0]);
 ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(NoPolicy.Properties.RowNames(1:10)), 'FontSize',8,'Location','northwest')
+legend(flip(b), flip(NoPolicy.Properties.RowNames(1:11)), 'FontSize',8,'Location','northwest')
 
 AreaSum1 = sortrows(AreaSum1,1,'descend');
 WaterSum1 = sortrows(WaterSum1,1,'descend');
@@ -281,19 +282,21 @@ legend(flip(b), flip(CostsSum3.Properties.RowNames(1:4)), 'FontSize',10,'Locatio
 % To be used after selecting "sensitivity analysis"
 
 colors1Em = [
-    0.72, 0.27, 1.0; 
-    0.49, 0.18, 0.56; 
-    0.93, 0.69, 0.13; 
+   0.72, 0.27, 1.0; 
+    0.49, 0.18, 0.56;  
+    0.93, 0.69, 0.13;  
     0.51, 0.37, 0.01;  
     0.29, 0.89, 0.69;  
-    0.47, 0.67, 0.19; 
+    0.47, 0.67, 0.19;  
     0.85, 0.33, 0.1;  
     0.64, 0.08, 0.18;  
     0.3, 0.75, 0.93;  
     0, 0.45, 0.74;
+    0, 1, 0.74;
 ];
 
-BySectors = cell(1,10);
+
+BySectors = cell(1,11);
 for i = 2:10
     BySectors{i} = CalcUpDownStream(SensitivityAnalysisCell{1,i-1});
     BySectors{i}(12,:) = [];
@@ -312,11 +315,11 @@ y(:, 1) = BySectors{2}{1:11,1};
 
 b = bar(x,y,'stacked');
 
-for i = 1:10
+for i = 1:11
     set(b(i), 'FaceColor', colors1Em(i, :));
 end
-ylim([0 90]) 
-legend(flip(b(1:10)), flip(BySectors{3}.Properties.RowNames(1:10,1)), 'FontSize',12,'Location','north')
+ylim([0 110]) 
+legend(flip(b(1:11)), flip(BySectors{3}.Properties.RowNames(1:11,1)), 'FontSize',12,'Location','north')
 title('Emissions By Sectors - 2050',  'FontSize', 28);
 ylabel('MtCO2Eq', 'FontSize', 20);
 xticklabels(Order);

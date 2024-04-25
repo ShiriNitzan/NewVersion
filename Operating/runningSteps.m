@@ -113,7 +113,7 @@ switch orderIndex
                   ScenariosAndValues{3,scenarioIndex} =  DesalinatedWater{1,i};
                   ScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,scenarioIndex}, 'MileStones', false);
                   [population] = populationCal(ScenariosTable);
-                  [EmissionsTable, ConsumptioTable, Resources] = FullScenario(DataBase, ScenariosTable, Years,population,orderIndex);
+                  [EmissionsTable, ConsumptioTable, Resources] = FullScenario(DataBase, ScenariosTable, Years,population,orderIndex,0);
                   SensitivityAnalysisCell{1, l} = EmissionsTable;
                   SensitivityAnalysisCell{2, l} = ConsumptioTable;
                   SensitivityAnalysisCell{3, l} = Resources;
