@@ -173,6 +173,8 @@ end
 for i = 1:Years
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentYearElectricity = CurrentYearElectricity*ChangeInElectricityConsumptionPercentage(i);
+    IndustryElectricityConsumption = ElectricityConsumptionTable{3,i}; %Maintains the value of electricity in the industry according to an increase of 1.1
+    CurrentYearElectricity(3,1) = IndustryElectricityConsumption; %Maintains the value of electricity in the industry according to an increase of 1.1
     ElectricityConsumptionTable{:,i} = CurrentYearElectricity;
 end
 

@@ -198,16 +198,15 @@ RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crud
 ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleum Gas', 'Other'};
 
 AmountsOfFuelsCells = Data.AmountsOfFuelsCells;
+AmountsOfFuelsCells{1,1}{4,:} = AmountsOfFuelsCells{1,1}{4,:}*2;%Completion to an estimated size of 1.5 MTOE Because currently the data is 0.75
 
-for i =2:Years
+for i = 1:Years
     CurrentFuelConsumption = array2table(zeros(4,7),'RowNames', RowNames);
     CurrentFuelConsumption.Properties.VariableNames = ColNames;
+    CurrentFuelConsumption{:,:}  =  AmountsOfFuelsCells{1}{:,:};
     CurrentFuelConsumption{:,:} = AmountsOfFuelsCells{1}{:,:}*ScenariosTable{9,i};
-    CurrentFuelConsumption{4,:} = CurrentFuelConsumption{4,:}*2; %Completion to an estimated size of 1.5 MTOE
     AmountsOfFuelsCells{i} = CurrentFuelConsumption;
-end    
- AmountsOfFuelsCells{1,1}{4,:} =   AmountsOfFuelsCells{1,1}{4,:}*2; % Completion to an estimated size of 1.5 MTOE
-
+end  
 %%
 function PercentVector = CalcChangeVector(MileStoneVector, Years, S, varargin)
     p = inputParser;
