@@ -72,14 +72,15 @@ for i = 1:height(EmissionsCoefficientsUpstream) %% 1-6
         if(i == 6) % dealing with PV
             if (j==2 || j==7) % only relevant for CO2 / CO2E
                 Delta = CurrentYearTable{7,3} - PrevYearTable{7,3}; % extra KHW consumption for this year
-                if Delta < 0
-                    Delta = 0;
-                end
-                if Year == 1 
+                    if Delta < 0
+                        Delta = 0;
+                    end
+                if Year == 1 %
                     Delta = Delta * 16/100; 
                 end
      % without the last if, the model calculates as all the panels were installed in 2017. since from 2016 to 2017,
      % the installed KW changed from 5% to 5.8%, we can assume that the delta is 0.8/5 
+
             TotalEmissionsPerYear{i,j} = Delta * EmissionsCoefficientsForPv{Year, 2}/1000000 * 25; %tons (25 is because the panels works for 25 years)
             % TotalEmissionsPerYear{i,j} = CurrentYear{7,3}*EmissionsCoefficientsUpstream(i,j)/1000000; % tons
             end
