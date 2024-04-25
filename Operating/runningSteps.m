@@ -13,7 +13,7 @@ switch orderIndex
         disp('Manual changes');
 
     case 2 %% Only one step
-
+   % each iteration calculates scenario i.
         for i = 1:ScenarioNumber
             OnlyOneStepScenariosTable = AllButOneChangesByScenarios(DataBase, i, Years, ScenariosAndValues{:,scenarioIndex}, 'OnlyOne', true);
             [population] = populationCal(OnlyOneStepScenariosTable);
@@ -44,8 +44,9 @@ switch orderIndex
         disp('Only one step');
         
     case 3 %% All steps but one
-        
         AllButOneScenariosTable = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,scenarioIndex});
+        % will return 19X34 table, each cell is the change of this factor
+        % for that year, when 2050 is dictated by "the three scenarios".
         [population] = populationCal(AllButOneScenariosTable);
         [EmissionsByYearsFull, ConsumptionAmountsFull, ResourcesFull, WaterFromFoodFull] = FullScenario(DataBase, AllButOneScenariosTable, Years, population,orderIndex,0);
         GlobalLocalEmissionsFull = CalcGlobalLocal(EmissionsByYearsFull);
@@ -78,6 +79,11 @@ switch orderIndex
         disp('All steps but one');
       
     case 4 %% All the steps together
+  % calculates 3 times: for BAU, MODERATE, ADVANCED
+  % first table: change in precentage for each parameter by the years.
+  % second table: population size per year, seperationg israel and the palestinians.
+  % returns: total Co2 by category, amounts of water/fuels/construction materials, all other resources by category, water for food.
+
         [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable1);
         [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1, WaterFromFood1] = FullScenario(DataBase, FullScenariosTable1,Years,population,orderIndex,0);
