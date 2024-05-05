@@ -55,17 +55,37 @@ Initialization = FoodConsumptionCell{1}{:,:}; % data of 2017
 % SHIRI'S UPDATE:
 % adding upper-bound to the growth of local consumption due to area limitation.
 UpperBound = Data.TotalGrowthForLocalFood;
+if (ScenariosTable{5,34} < 0.8267 && ScenariosTable{5,34} > 0.826) 
+    % moderate scenario: due to the prevention of food loss we can use more land.
+    UpperBound = UpperBound * 1.24;
+elseif (ScenariosTable{5,34} < 0.7467 && ScenariosTable{5,34} > 0.746) %advanced
+    UpperBound = UpperBound * 1.41;
+end
+
 FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(ScenariosTable, UpperBound, Years);
 FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years);
+FoodPercentageByTheYearsOriginal = ScenariosTable{1,:};
+OnlyImportedFoodIndex = [2, 8, 45, 46, 47, 55, 57, 62];
 
 for i = 1:Years
+    % each column is multiplied by the relevant percentages, in order to
+    % limit the area for food in Israel to 4500
     CurrentConsumption = array2table(zeros(64,4), 'RowNames', RowNames);
     CurrentConsumption{:,1} = Initialization(:,1)*(FoodPercentegeByTheYearsLocal(i));
     CurrentConsumption{:,2} = Initialization(:,2)*(FoodPercentegeByTheYearsLocal(i));
     CurrentConsumption{:,3} = Initialization(:,3)*(FoodPercentegeByTheYearsGlobal(i));
     CurrentConsumption{:,4} = Initialization(:,4)*(FoodPercentegeByTheYearsGlobal(i));
     CurrentConsumption.Properties.VariableNames = ColNames;
+
+    for j = OnlyImportedFoodIndex
+        % food that is grown only overseas isnt affacted by the area
+        % limitation, and therefore only by the population growth: 
+        % (change when updating the area coefficients in the orignal DATA)
+        CurrentConsumption{j,:} = Initialization(j,:) * FoodPercentageByTheYearsOriginal(i);
+    end
+
     FoodConsumptionCell{i} =  CurrentConsumption;
+
 end
 
 % for i = 1:Years
@@ -119,7 +139,7 @@ CurrentConsumption{1,8} = 586;
 
 WaterConsumptionCell{1} =  CurrentConsumption;
 
-if (ScenariosTable{1,i}) == ScenariosTable{1,width(ScenariosTable)} && (orderIndex == 2) %The essential change that ensures the correctness of the water mod in a single scenario
+if (ScenariosTable{1,1}) == ScenariosTable{1,width(ScenariosTable)} && (orderIndex == 2) %The essential change that ensures the correctness of the water model in a single scenario
     for i =2:Years
         CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
         CurrentConsumption{1,1} = 1070;
@@ -142,7 +162,7 @@ else
         CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
         CurrentConsumption{1,5} = waterData{3,i}; %% natural from
         CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
-        CurrentConsumption{1,7} = 400; %% Brackish water, fresh and non-fresh reservoir water
+        CurrentConsumption{1,7} = 250; %% Brackish water, fresh and non-fresh reservoir water
         CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
         if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
             CurrentConsumption{1,1} = 1070;
@@ -193,20 +213,18 @@ end
 
 
 %% Amounts of Fuels
-
-RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crude Oil Import', 'Crude Oil Products - For Energy' };
+RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crude Oil Import', 'Crude Oil Products - For Energy', 'LPG - Home', 'LPG - Commertiel' };
 ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleum Gas', 'Other'};
-
 AmountsOfFuelsCells = Data.AmountsOfFuelsCells;
 AmountsOfFuelsCells{1,1}{4,:} = AmountsOfFuelsCells{1,1}{4,:}*2;%Completion to an estimated size of 1.5 MTOE Because currently the data is 0.75
-
 for i = 1:Years
-    CurrentFuelConsumption = array2table(zeros(4,7),'RowNames', RowNames);
+    CurrentFuelConsumption = array2table(zeros(6,7),'RowNames', RowNames);
     CurrentFuelConsumption.Properties.VariableNames = ColNames;
     CurrentFuelConsumption{:,:}  =  AmountsOfFuelsCells{1}{:,:};
-    CurrentFuelConsumption{:,:} = AmountsOfFuelsCells{1}{:,:}*ScenariosTable{9,i};
+    CurrentFuelConsumption{1:4,:} = AmountsOfFuelsCells{1}{1:4,:}*ScenariosTable{9,i}; % The multiplication in ScenariosTable{9,i} is because we understand that the amount of fuels in the industry will decrease according to this vector
+    CurrentFuelConsumption{5:6,:} = AmountsOfFuelsCells{1}{5:6,:}*ScenariosTable{1,i}; % The multiplication in ScenariosTable{1,i} is because we understand that the amount of LPG will increase according to the increase in the population
     AmountsOfFuelsCells{i} = CurrentFuelConsumption;
-end  
+end   
 %%
 function PercentVector = CalcChangeVector(MileStoneVector, Years, S, varargin)
     p = inputParser;

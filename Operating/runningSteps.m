@@ -25,11 +25,6 @@ switch orderIndex
             [WaterSumCurrent, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcOnlyOne(ConsumptionAmounts, WaterFromFood,i);
             [AreaSumCurrent, GlobalAreaDiff, LocalAreaDiff] = AreaSumCalcOnlyOne(Resources); 
          
-            if i == 15
-               a=true ;
-            end
-            
-
             %OnlyOneAnalysis{i,1} = EmissionsSumCurrentBase(1);
             OnlyOneAnalysis{i,1} = GlobalDiff+LocalDiff;
             OnlyOneAnalysis{i,2} = GlobalDiff;
@@ -60,11 +55,7 @@ switch orderIndex
             LocalDiff = sum(GlobalLocalEmissionsFull{1,width(GlobalLocalEmissionsFull)}{1,:}) - sum(GlobalLocalEmissions{1,width(GlobalLocalEmissions)}{1,:});
             [CurrentWater, GlobalWaterDiff, LocalWaterDiff] = WaterSumCalcAllButOne(ConsumptionAmounts, ConsumptionAmountsFull, WaterFromFood, WaterFromFoodFull);
             [CurrentArea, GlobalAreaDiff, LocalAreaDiff] = AreaSumCalcAllButOne(Resources, ResourcesFull);
-         
-            if i == 15
-               a=true ;
-            end
-            
+       
             %AllButOneAnalysis{i,1} = CurrentEmissions;
             AllButOneAnalysis{i,1} = GlobalDiff+LocalDiff;
             AllButOneAnalysis{i,2} = GlobalDiff;
@@ -75,7 +66,7 @@ switch orderIndex
             AllButOneAnalysis{i,7} = CurrentArea;
             AllButOneAnalysis{i,8} = GlobalAreaDiff;
             AllButOneAnalysis{i,9} = LocalAreaDiff;
-          end
+        end
         disp('All steps but one');
       
     case 4 %% All the steps together

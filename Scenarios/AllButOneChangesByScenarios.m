@@ -9,7 +9,7 @@ parse(q,varargin{:});
 CurrentEnergyConsumptionFromRenewableEnergies = Data.InitialPercentage(3);
 CurrentEnergyConsumptionFromNaturalGas = Data.InitialPercentage(2);
 
-RowNames = {'Population Growth', 'Increased Electricity Per Capita', 'Increase in Desalinared Water', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Change In Energy Consumption From Renewable Energies', 'Electricity Production by Natural Gas','Electricity Saving','Waste Minimization','Recycled Waste', 'Burning Waste', 'Reduction Of Mileage', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving'};
+RowNames = {'Population Growth', 'Increased Electricity Per Capita', 'Increase in Desalinared Water', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Change In Energy Consumption From Renewable Energies', 'Electricity Production by Natural Gas','Electricity Saving','Fuel for Energy','Recycled Waste', 'Burning Waste', 'Reduction Of Mileage', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving'};
 ColumnNames = ones(1, Years);
 AllButOneScenariosTable = array2table(zeros(length(S), Years), 'RowNames', RowNames);
 %%ConsumptionChanges = array2table(zeros(sum(Type == "Consumption"), Years),'RowNames', RowNames(Type == 'Consumption'));

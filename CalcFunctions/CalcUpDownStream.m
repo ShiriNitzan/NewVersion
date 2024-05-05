@@ -23,7 +23,7 @@
         UpDownStreamEmissions{5,i} = sum(EmissionsByYears{1,i}{1,1}{1,1:2})/1000000;
         UpDownStreamEmissions{6,i} = sum(EmissionsByYears{1,i}{1,1}{1,3:5})/1000000;
 
-        UpDownStreamEmissions{11,i} = sum(EmissionsByYears{9,i}{1,1}{1,:})/1000000;
+        UpDownStreamEmissions{11,i} = (sum(EmissionsByYears{9,i}{1,1}{1,:})+EmissionsByYears{9,i}{1,1}{2,6}+EmissionsByYears{9,i}{1,1}{3,6})/1000000;
 
     end
     

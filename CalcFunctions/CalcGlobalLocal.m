@@ -10,9 +10,11 @@ function [GlobalLocalEmission, TotalGlobalLocal] = CalcGlobalLocal(EmissionsByYe
         GlobalLocalEmission{2,i}.Electricity(1) = (EmissionsByYears{3,i}{1,1}{1,7}+EmissionsByYears{3,i}{1,1}{5,7}+EmissionsByYears{3,i}{1,1}{6,7})/1000000;
         GlobalLocalEmission{1,i}.Transportation(1) = (sum(EmissionsByYears{4,i}{1,1}{:,16}) + sum(EmissionsByYears{6,i}{1,1}{1:5,7})+EmissionsByYears{6,i}{1,1}{7,7}+sum(EmissionsByYears{5,i}{1,1}{:,12}) + EmissionsByYears{2,i}{1,1}{5,9})/1000000;
         GlobalLocalEmission{2,i}.Transportation(1) = (EmissionsByYears{6,i}{1,1}{6,7} + EmissionsByYears{6,i}{1,1}{8,7} )/1000000;        GlobalLocalEmission{1,i}.Food(1) = sum(EmissionsByYears{1,i}{1:1}{1,1:2})/1000000 + EmissionsByYears{1,i}{1:1}{1,5}/1000000;
+        GlobalLocalEmission{1,i}.Food(1) = sum(EmissionsByYears{1,i}{1:1}{1,1:2})/1000000 + EmissionsByYears{1,i}{1:1}{1,5}/1000000;
         GlobalLocalEmission{2,i}.Food(1) = sum(EmissionsByYears{1,i}{1:1}{1,3:4})/1000000;
         GlobalLocalEmission{1,i}.Water(1)  = (EmissionsByYears{10,i}{1,1}{1,2} + EmissionsByYears{2,i}{1,1}{6,9})/1000000;
-%       GlobalLocalEmission{1,i}.Materials(1)  = (sum(EmissionsByYears{9,i}{1,1}{2,:}) + sum(EmissionsByYears{9,i}{1,1}{6,:}) + sum(EmissionsByYears{9,i}{1,1}{10,:}) + sum(EmissionsByYears{8,i}{1,1}{:,3}))/1000000;
+        GlobalLocalEmission{2,i}.Water(1)  = (EmissionsByYears{2,i}{1,1}{7,9})/1000000;
+        GlobalLocalEmission{1,i}.Materials(1)  = (sum(EmissionsByYears{9,i}{1,1}{1,:})+EmissionsByYears{9,i}{1,1}{2,6}+EmissionsByYears{9,i}{1,1}{3,6})/1000000;
 %       GlobalLocalEmission{2,i}.Materials(1) = sum(EmissionsByYears{9,i}{1,1}{:,12})/1000000;
         GlobalLocalEmission{1,i}.Construction(1) = sum(EmissionsByYears{7,i}{1,1}{11:12,2})/1000000;
         GlobalLocalEmission{2,i}.Construction(1) = EmissionsByYears{7,i}{1,1}{13,2}/1000000;
