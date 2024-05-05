@@ -55,17 +55,37 @@ Initialization = FoodConsumptionCell{1}{:,:}; % data of 2017
 % SHIRI'S UPDATE:
 % adding upper-bound to the growth of local consumption due to area limitation.
 UpperBound = Data.TotalGrowthForLocalFood;
+if (ScenariosTable{5,34} < 0.8267 && ScenariosTable{5,34} > 0.826) 
+    % moderate scenario: due to the prevention of food loss we can use more land.
+    UpperBound = UpperBound * 1.24;
+elseif (ScenariosTable{5,34} < 0.7467 && ScenariosTable{5,34} > 0.746) %advanced
+    UpperBound = UpperBound * 1.41;
+end
+
 FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(ScenariosTable, UpperBound, Years);
 FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years);
+FoodPercentageByTheYearsOriginal = ScenariosTable{1,:};
+OnlyImportedFoodIndex = [2, 8, 45, 46, 47, 55, 57, 62];
 
 for i = 1:Years
+    % each column is multiplied by the relevant percentages, in order to
+    % limit the area for food in Israel to 4500
     CurrentConsumption = array2table(zeros(64,4), 'RowNames', RowNames);
     CurrentConsumption{:,1} = Initialization(:,1)*(FoodPercentegeByTheYearsLocal(i));
     CurrentConsumption{:,2} = Initialization(:,2)*(FoodPercentegeByTheYearsLocal(i));
     CurrentConsumption{:,3} = Initialization(:,3)*(FoodPercentegeByTheYearsGlobal(i));
     CurrentConsumption{:,4} = Initialization(:,4)*(FoodPercentegeByTheYearsGlobal(i));
     CurrentConsumption.Properties.VariableNames = ColNames;
+
+    for j = OnlyImportedFoodIndex
+        % food that is grown only overseas isnt affacted by the area
+        % limitation, and therefore only by the population growth: 
+        % (change when updating the area coefficients in the orignal DATA)
+        CurrentConsumption{j,:} = Initialization(j,:) * FoodPercentageByTheYearsOriginal(i);
+    end
+
     FoodConsumptionCell{i} =  CurrentConsumption;
+
 end
 
 % for i = 1:Years
@@ -368,12 +388,12 @@ function FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(Scena
 end
 
 function FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years)
-% if there's no more available area in Israel - the growth is move overseas.
+% if there's no more available area in Israel - the growth is moved to overseas.
     PercentegeByTheYears = ScenariosTable{1,:};
     FoodPercentegeByTheYearsGlobal = PercentegeByTheYears;
     for i = 1:Years
         if PercentegeByTheYears(i) > UpperBound
-           DeltaArea = PercentegeByTheYears(i) - UpperBound;
+           DeltaArea = PercentegeByTheYears(i) - UpperBound; % adding the gap so it would be imported
            FoodPercentegeByTheYearsGlobal(i) = FoodPercentegeByTheYearsGlobal(i) + DeltaArea;
         end
     end
