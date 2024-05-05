@@ -69,7 +69,6 @@ for i=1:Years
         end
     end
    
-
     WaterFromFoodCell{i} = CalcWaterForFoodConsumption(Data, CurrentFoodConsumption);
     EmissionsFromFood = CalcCo2eFromFoodConsumption(Data, CurrentFoodConsumption, OrganicWasteCell{i});
     %EmissionsFromWaterToGlobalFood = sum(WaterFromFoodCell{i}{1,3:4})*(0.4+0.2+0.51)*10^6;

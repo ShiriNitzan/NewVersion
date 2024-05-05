@@ -386,12 +386,12 @@ function FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(Scena
 end
 
 function FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years)
-% if there's no more available area in Israel - the growth is move overseas.
+% if there's no more available area in Israel - the growth is moved to overseas.
     PercentegeByTheYears = ScenariosTable{1,:};
     FoodPercentegeByTheYearsGlobal = PercentegeByTheYears;
     for i = 1:Years
         if PercentegeByTheYears(i) > UpperBound
-           DeltaArea = PercentegeByTheYears(i) - UpperBound;
+           DeltaArea = PercentegeByTheYears(i) - UpperBound; % adding the gap so it would be imported
            FoodPercentegeByTheYearsGlobal(i) = FoodPercentegeByTheYearsGlobal(i) + DeltaArea;
         end
     end
