@@ -20,8 +20,11 @@ for i=2:Years
   ElectricityConsumptionTable{1, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{1,1}; %home
   ElectricityConsumptionTable{2, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{2,1}; %public/commercial
   ElectricityConsumptionTable{4, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{4,1}; %other
-  ElectricityConsumptionTable{3, i} = ChangeInElectricityConsumptionPercentageIndustry(i) * ElectricityConsumptionTable{3,1}; %industrial
-
+  if ScenariosTable{1,1} == ScenariosTable{1,Years}
+    ElectricityConsumptionTable{3, i} =   ScenariosTable{1,i} * ElectricityConsumptionTable{3,1}; %industrial 
+  else
+    ElectricityConsumptionTable{3, i} =   ChangeInElectricityConsumptionPercentageIndustry(i) * ElectricityConsumptionTable{3,1}; %industrial
+  end
 end
 
 %% Transportation Consumption

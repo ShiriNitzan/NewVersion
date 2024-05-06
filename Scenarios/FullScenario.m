@@ -271,11 +271,11 @@ for i=1:Years
         addKWHfromFuels{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63; % Conversion of the amount of fuels to electricity in the case of industrial fuels
         addKWHfromFuels{2,i} = (sum(AmountsOfFuelsCells{1,i}{5,:})-  sum(AmountsOfFuelsCells{1,i}{5,:})*ScenariosTable{9,i} )*11.63; % Conversion of the amount of fuel to electricity in the case of home LPG
         addKWHfromFuels{3,i} = (sum(AmountsOfFuelsCells{1,i}{6,:})-  sum(AmountsOfFuelsCells{1,i}{6,:})*ScenariosTable{9,i} )*11.63; % Conversion of the amount of fuel to electricity in the case of Commercial LPG
-    
+    %{
         ElectricityConsumptionTable{1,i} = ElectricityConsumptionTable{1,i} + (sum(AmountsOfFuelsCells{1,i}{5,:})-  sum(AmountsOfFuelsCells{1,i}{5,:})*ScenariosTable{9,i} )*11.63;
         ElectricityConsumptionTable{2,i} = ElectricityConsumptionTable{2,i} + (sum(AmountsOfFuelsCells{1,i}{6,:})-  sum(AmountsOfFuelsCells{1,i}{6,:})*ScenariosTable{9,i} )*11.63;
         ElectricityConsumptionTable{3,i} = ElectricityConsumptionTable{3,i} + (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
-   
+    %}
     end
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};
