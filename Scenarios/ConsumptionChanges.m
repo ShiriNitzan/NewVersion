@@ -65,7 +65,7 @@ end
 FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(ScenariosTable, UpperBound, Years);
 FoodPercentegeByTheYearsGlobal = CalcFoodPercentegeByTheYearsGlobal(ScenariosTable, UpperBound, Years);
 FoodPercentageByTheYearsOriginal = ScenariosTable{1,:};
-OnlyImportedFoodIndex = [2, 8, 45, 46, 47, 55, 57, 62];
+OnlyImportedFoodIndex = [2, 8, 45, 46, 47, 55, 57, 58, 62];
 
 for i = 1:Years
     % each column is multiplied by the relevant percentages, in order to
