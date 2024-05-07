@@ -36,10 +36,16 @@ for i=1:Years
     s1 = num2str(i+2016);
     YearsStringsForColNames{i} = s1;
 end
-%% Fuel for energy in the industry
+%% Fuel for energy in the industry & others
+RowNames = {'Crude Oil Products - For Energy', 'LPG - Home', 'LPG - Commertiel'  };
+ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleum Gas', 'Other'};
+
  for i=1:Years 
-   ConsumptionAmounts{5,i} = array2table(AmountsOfFuelsCells{1,i}{4,:}); % data transfer
-   EmissionsByYears{9,i} =   array2table(ConsumptionAmounts{5,i}{:,:}*2.5); %Calculation of emissions according to Raziel's coefficient
+   ConsumptionAmounts{5,i} = array2table(AmountsOfFuelsCells{1,i}{4:6,:},'RowNames', RowNames,'VariableNames',ColNames); % data transfer
+   EmissionsByYears{9,i} = array2table(ConsumptionAmounts{5,i}{:,:}); % Creating a table within the emissions table
+   EmissionsByYears{9,i}{1,:} = EmissionsByYears{9,i}{1,:}*2.5; % Calculation of the emissions of the fuels in MTOE by multiplying by 2.5
+   EmissionsByYears{9,i}{2:3,:} = EmissionsByYears{9,i}{2:3,:}*ScenariosTable{9,i}*2.9; %Calculation of LPG emissions by multiplying by a factor of 2.9 while calculating the amount of LPG by reducing the amount according to the ratio ScenariosTable{9,i}
+   EmissionsByYears{9,i} = array2table(EmissionsByYears{9,i}{:,:},'RowNames', RowNames,'VariableNames',ColNames);
  end
 %% Food Emissions & Food Resource Consumption - scenario 4
 % When reducing beef consumption, we considered a replacement by other food products.
@@ -259,11 +265,17 @@ ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 
 PreviousYearElectricity = ElectricityBySources{:,1}; %tables of zeros- for the first iteration.
 
-addKWHfromIndustry = array2table(zeros(1,Years));
+addKWHfromFuels = array2table(zeros(3,Years));
 for i=1:Years
     if i >= 2
-        addKWHfromIndustry{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
+        addKWHfromFuels{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63; % Conversion of the amount of fuels to electricity in the case of industrial fuels
+        addKWHfromFuels{2,i} = (sum(AmountsOfFuelsCells{1,i}{5,:})-  sum(AmountsOfFuelsCells{1,i}{5,:})*ScenariosTable{9,i} )*11.63; % Conversion of the amount of fuel to electricity in the case of home LPG
+        addKWHfromFuels{3,i} = (sum(AmountsOfFuelsCells{1,i}{6,:})-  sum(AmountsOfFuelsCells{1,i}{6,:})*ScenariosTable{9,i} )*11.63; % Conversion of the amount of fuel to electricity in the case of Commercial LPG
+    %{
+        ElectricityConsumptionTable{1,i} = ElectricityConsumptionTable{1,i} + (sum(AmountsOfFuelsCells{1,i}{5,:})-  sum(AmountsOfFuelsCells{1,i}{5,:})*ScenariosTable{9,i} )*11.63;
+        ElectricityConsumptionTable{2,i} = ElectricityConsumptionTable{2,i} + (sum(AmountsOfFuelsCells{1,i}{6,:})-  sum(AmountsOfFuelsCells{1,i}{6,:})*ScenariosTable{9,i} )*11.63;
         ElectricityConsumptionTable{3,i} = ElectricityConsumptionTable{3,i} + (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63;
+    %}
     end
     CurrentYearElectricity = ElectricityConsumptionTable{:,i};
     CurrentElectricityFromWater = ElectricityFromWaterCell{i};

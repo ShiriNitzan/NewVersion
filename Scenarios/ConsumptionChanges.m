@@ -10,7 +10,6 @@ addOptional(p,'ChangesStruct', []);
 parse(p,varargin{:});
 
 % NEW: Electicity that the industry consumes isnt affected by the population growth.
-
 ElectricityConsumptionTable = Data.ElectricityConsumptionTable;
 IndustryElectricityConsumptionChange = Data.IndustryElectricityConsumptionChange; % assuming industrial grow by 1.1
 ChangeInElectricityConsumptionPercentageIndustry = CalculatePercentageLinear(1, IndustryElectricityConsumptionChange, Years);
@@ -20,12 +19,16 @@ for i=2:Years
   ElectricityConsumptionTable{1, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{1,1}; %home
   ElectricityConsumptionTable{2, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{2,1}; %public/commercial
   ElectricityConsumptionTable{4, i} = ScenariosTable{1,i} * ElectricityConsumptionTable{4,1}; %other
-  ElectricityConsumptionTable{3, i} = ChangeInElectricityConsumptionPercentageIndustry(i) * ElectricityConsumptionTable{3,1}; %industrial
-
+  if ScenariosTable{1,1} == ScenariosTable{1,Years}
+    ElectricityConsumptionTable{3, i} =   ScenariosTable{1,i} * ElectricityConsumptionTable{3,1}; %industrial 
+  else
+    ElectricityConsumptionTable{3, i} =   ChangeInElectricityConsumptionPercentageIndustry(i) * ElectricityConsumptionTable{3,1}; %industrial
+  end
 end
 
 %% Transportation Consumption
 TransportationConsumptionTable = Data.TransportationConsumptionTable;
+
 
 for i=2:Years
     Growth = ScenariosTable{1,i}*1.011;
@@ -139,7 +142,7 @@ CurrentConsumption{1,8} = 586;
 
 WaterConsumptionCell{1} =  CurrentConsumption;
 
-if (ScenariosTable{1,i}) == ScenariosTable{1,width(ScenariosTable)} && (orderIndex == 2) %The essential change that ensures the correctness of the water mod in a single scenario
+if (ScenariosTable{1,1}) == ScenariosTable{1,width(ScenariosTable)} && (orderIndex == 2) %The essential change that ensures the correctness of the water model in a single scenario
     for i =2:Years
         CurrentConsumption = array2table(zeros(1,8), 'VariableNames', ColNames);
         CurrentConsumption{1,1} = 1070;
@@ -162,7 +165,7 @@ else
         CurrentConsumption{1,4} = waterData{2,i}; %% for Nature
         CurrentConsumption{1,5} = waterData{3,i}; %% natural from
         CurrentConsumption{1,6} = 0.66*CurrentConsumption{1,1}; %% WasteWater from
-        CurrentConsumption{1,7} = 400; %% Brackish water, fresh and non-fresh reservoir water
+        CurrentConsumption{1,7} = 250; %% Brackish water, fresh and non-fresh reservoir water
         CurrentConsumption{1,8} = CurrentConsumption{1,1}*0.898904 + CurrentConsumption{1,2}*0.35 + CurrentConsumption{1,3} - CurrentConsumption{1,5}; %% desalinated from
         if i == 6 % Adjustment to the water model data for 2022, until all the data in the software is updated
             CurrentConsumption{1,1} = 1070;
@@ -213,20 +216,18 @@ end
 
 
 %% Amounts of Fuels
-
-RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crude Oil Import', 'Crude Oil Products - For Energy' };
+RowNames = {'Crude Oil Products - Not for Energy', 'Crude Oil For Export', 'Crude Oil Import', 'Crude Oil Products - For Energy', 'LPG - Home', 'LPG - Commertiel' };
 ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleum Gas', 'Other'};
-
 AmountsOfFuelsCells = Data.AmountsOfFuelsCells;
 AmountsOfFuelsCells{1,1}{4,:} = AmountsOfFuelsCells{1,1}{4,:}*2;%Completion to an estimated size of 1.5 MTOE Because currently the data is 0.75
-
 for i = 1:Years
-    CurrentFuelConsumption = array2table(zeros(4,7),'RowNames', RowNames);
+    CurrentFuelConsumption = array2table(zeros(6,7),'RowNames', RowNames);
     CurrentFuelConsumption.Properties.VariableNames = ColNames;
     CurrentFuelConsumption{:,:}  =  AmountsOfFuelsCells{1}{:,:};
-    CurrentFuelConsumption{:,:} = AmountsOfFuelsCells{1}{:,:}*ScenariosTable{9,i};
+    CurrentFuelConsumption{1:4,:} = AmountsOfFuelsCells{1}{1:4,:}*ScenariosTable{9,i}; % The multiplication in ScenariosTable{9,i} is because we understand that the amount of fuels in the industry will decrease according to this vector
+    CurrentFuelConsumption{5:6,:} = AmountsOfFuelsCells{1}{5:6,:}*ScenariosTable{1,i}; % The multiplication in ScenariosTable{1,i} is because we understand that the amount of LPG will increase according to the increase in the population
     AmountsOfFuelsCells{i} = CurrentFuelConsumption;
-end  
+end   
 %%
 function PercentVector = CalcChangeVector(MileStoneVector, Years, S, varargin)
     p = inputParser;

@@ -15,11 +15,10 @@ ElectricityConsumptionEmissionsInTransportationTable = array2table(zeros(height(
 ElectricVehicleImprovements = ReductionVectorCalc(BaseYear,TargetYear, ImprovementValues{2,1});
 ElectricityConsumptionEmissionsInTransportationTable{:,1} = DataBase.ElectricityConsumptionEmissionsInTransportation;
 for i = 1:Years
-    ElectricityConsumptionEmissionsInTransportationTable{1,i} = ElectricityConsumptionEmissionsInTransportationTable{1,1}.*ElectricVehicleImprovements(i);
-    ElectricityConsumptionEmissionsInTransportationTable{2,i} = ElectricityConsumptionEmissionsInTransportationTable{2,1};%*ElectricVehicleImprovements(i); There is no improvement of electric vehicles of these types below
-    ElectricityConsumptionEmissionsInTransportationTable{3,i} = ElectricityConsumptionEmissionsInTransportationTable{3,1};%*ElectricVehicleImprovements(i);
-    ElectricityConsumptionEmissionsInTransportationTable{4,i} = ElectricityConsumptionEmissionsInTransportationTable{4,1};%.*ElectricVehicleImprovements(i);
-
+    ElectricityConsumptionEmissionsInTransportationTable{1,i} = ElectricityConsumptionEmissionsInTransportationTable{1,1}*ElectricVehicleImprovements(i);
+    ElectricityConsumptionEmissionsInTransportationTable{2,i} = ElectricityConsumptionEmissionsInTransportationTable{2,1}*ElectricVehicleImprovements(i);
+    ElectricityConsumptionEmissionsInTransportationTable{3,i} = ElectricityConsumptionEmissionsInTransportationTable{3,1}*ElectricVehicleImprovements(i);
+    ElectricityConsumptionEmissionsInTransportationTable{4,i} = ElectricityConsumptionEmissionsInTransportationTable{4,1}*ElectricVehicleImprovements(i);
 end
 ElectricityConsumptionEmissionsInTransportationTable.Properties.VariableNames = ColumnNames;
 ElectricityConsumptionEmissionsInTransportationTable.Properties.RowNames = {'Electric Car', 'Electric Van', 'Electric Truck', 'Electric Bus'};
