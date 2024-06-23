@@ -4,7 +4,7 @@ population  = array2table(zeros(4,34));
 RowNames = {'Num','Years', 'Israel population', 'Palestinian Authority population'};
 population.Properties.RowNames = RowNames;
 
-for i =1:34
+for i =1:width(PrecentegeByTheYears)
     population(1,i) = {i};
     population(2,i) = {i+2016};
     population(3,i) = {8.8*PrecentegeByTheYears{1,i}};

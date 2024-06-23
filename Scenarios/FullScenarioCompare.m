@@ -128,7 +128,7 @@ for i = 1:Years
     TransportationConsumptionTable{1,i} = TransportationConsumptionTable{1,i}*PercentageOfBusTransportation(i);
 end
 
-%%change in vehicle amounts
+%%change in vehicle amounts - note that this function is at the bottom here!
 VehicleAmountsCell = CalulateChangeInVehicleAmountsTransitionToPublicTransport(TransportationConsumptionTable, VehicleAmountsCell);
 
 ElectricityConsumptionEmissionsInTransportation = Data.ElectricityConsumptionEmissionsInTransportation;

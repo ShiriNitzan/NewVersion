@@ -58,11 +58,13 @@ Initialization = FoodConsumptionCell{1}{:,:}; % data of 2017
 % SHIRI'S UPDATE:
 % adding upper-bound to the growth of local consumption due to area limitation.
 UpperBound = Data.TotalGrowthForLocalFood;
-if (ScenariosTable{5,34} < 0.8267 && ScenariosTable{5,34} > 0.826) 
+if (width(ScenariosTable) == 34) % making sure the table has enough columns
+    if (ScenariosTable{5,34} < 0.8267 && ScenariosTable{5,34} > 0.826) 
     % moderate scenario: due to the prevention of food loss we can use more land.
     UpperBound = UpperBound * 1.24;
-elseif (ScenariosTable{5,34} < 0.7467 && ScenariosTable{5,34} > 0.746) %advanced
+    elseif (ScenariosTable{5,34} < 0.7467 && ScenariosTable{5,34} > 0.746) %advanced
     UpperBound = UpperBound * 1.41;
+    end
 end
 
 FoodPercentegeByTheYearsLocal = CalcFoodPercentegeByTheYearsLocal(ScenariosTable, UpperBound, Years);
@@ -99,11 +101,11 @@ end
 % end
 
 %% Water model pre-data 
-waterData  = array2table(zeros(3,34));
+waterData  = array2table(zeros(3,Years));
 RowNames = {'Agriculture per capita', 'Water for nature', 'Drilling Water'};
 waterData.Properties.RowNames = RowNames;
 waterData(3,1) = {956}; % Ground Water
-for i =1:34
+for i =1:Years
    waterData(1,i) = {-10.79*log(i+16)+167.91}; % Agriculture per capita
    switch true % water for nature
        case i<10
@@ -228,6 +230,24 @@ for i = 1:Years
     CurrentFuelConsumption{5:6,:} = AmountsOfFuelsCells{1}{5:6,:}*ScenariosTable{1,i}; % The multiplication in ScenariosTable{1,i} is because we understand that the amount of LPG will increase according to the increase in the population
     AmountsOfFuelsCells{i} = CurrentFuelConsumption;
 end   
+
+%% ADJUSTING FOR 2035:
+%  REMOVING UNECESSARY COLUMNS FROM THE TABLES:
+
+if (orderIndex >= 7 && width(ScenariosTable) < 34) 
+   ElectricityConsumptionTable = ElectricityConsumptionTable(:, 1:Years);
+   TransportationConsumptionTable = TransportationConsumptionTable(:, 1:Years);
+   VehicleAmountsCell = VehicleAmountsCell(:, 1:Years);
+   FoodConsumptionCell = FoodConsumptionCell(:, 1:Years);
+   WaterConsumptionCell = WaterConsumptionCell(:, 1:Years);
+   ConstructionTable = ConstructionTable(:, 1:Years);
+   WateAndRecyclingCell = WateAndRecyclingCell(:, 1:Years);
+   AmountsOfFuelsCells = AmountsOfFuelsCells(:, 1:Years);
+   OrganicWasteAmount =OrganicWasteAmount(:, 1:Years);
+end
+
+ 
+
 %%
 function PercentVector = CalcChangeVector(MileStoneVector, Years, S, varargin)
     p = inputParser;
@@ -366,6 +386,8 @@ end
 end
 
  end
+
+
 
  %% OTHER FUNCTIONS:
 
