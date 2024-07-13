@@ -341,50 +341,8 @@ xlabel('State', 'FontSize', 20);
 
 
 
-%% NEW NEW NEW - Sensitivity analysis for DOMESTIC ONLY
-% To be used after selecting "sensitivity analysis"
-
-colors1Em = [
-    0.902, 0.373, 0.145; % electricity 
-    0.949, 0.737, 0.239;  % transportaion - L
-    0.784, 0.910, 0.690; % food - L 
-    0.871, 0.761, 0.941; % construction - L 
-    0.302, 0.749, 0.929; % water - L
-    0.361, 0.325, 0.325; % fuels - L
-];
-
-BySectors = cell(1,11);
-for i = 2:10
-    BySectors{i} = CalcUpDownStream(SensitivityAnalysisCell{1,i-1});
-    BySectors{i}(12,:) = [];
-end    
-
-Order = {'Base Year','Pop 0%\newlineElec 0%', 'Pop 0%\newlineElec 20%', 'Pop 0%\newlineElec 41%','Pop 45%\newlineElec 0%','Pop 45%\newlineElec 20%','Pop 45%\newlineElec 41%','Pop 90%\newlineElec 0%','Pop 90%\newlineElec 20%','Pop 90%\newlineElec 41%'};
-h = categorical({'Base\nYear','1\nPop 0%\nElec 0%', '2\n', '3\n','4\n','5\n','6\n','7\n','8\n','9\n'});
-
-x = categorical(0:1:9);
-y = zeros(6,10);
-for i = 2:10
-    y(:,i) = BySectors{1,i}{1:2:11,Years};
-end
-
-y(:, 1) = BySectors{2}{1:2:11,1};
-
-b = bar(x,y,'stacked');
-
-for i = 1:6
-    set(b(i), 'FaceColor', colors1Em(i, :));
-end
-ylim([0 110]) 
-legend(flip(b(1:6)), flip(BySectors{3}.Properties.RowNames(1:2:11)),  'FontSize',12,'Location','northeast') 
-title('Emissions By Sectors - 2050',  'FontSize', 28);
-ylabel('MtCO2Eq', 'FontSize', 20);
-xticklabels(Order);
-xtickangle(0);
-xlabel('State', 'FontSize', 20);
-
 %% emissions-area-water: base year to 2035 with specific scenario
-% To be used after selecting "all steps together" (FOR 2035!)
+% To be used after selecting "all steps together" (FOR 2035!) - index 7
 
 %preparations
 [AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1,WaterFromFood1);
@@ -406,8 +364,6 @@ colors1Em = [
     0.361, 0.325, 0.325; % fuels - L
 ];
 
-
-
 colors2Area = [
     0.4314, 0.6196, 0.4627;
     0.7961, 0.8863, 0.6667; 
@@ -427,6 +383,8 @@ colors3Water = [
 t = tiledlayout(1,3);
 nexttile
 NoPolicy = CalcUpDownStream(EmissionsByYearsTest1);
+NoPolicy.Properties.RowNames = strrep(NoPolicy.Properties.RowNames, 'Local', ' Domestic');
+
 Scenario2 = CalcUpDownStream(EmissionsByYearsTest3);
 Order = {'Base Year','No Policy - 2035', 'Chosen Scenario - 2035'};
 
@@ -440,8 +398,8 @@ for i = 1:numel(b)
     set(b(i), 'FaceColor', colors1Em(i, :));
 end
 
-ylim([0 270])
-title('Emissions', 'FontSize', 14,'Position', [2.5, 275, 0]);
+ylim([0 190])
+title('Emissions', 'FontSize', 14,'Position', [2, 195, 0]);
 xticklabels(Order);
 xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);
@@ -463,6 +421,8 @@ AreaSum3(1, :) = [];
 WaterSum3(1, :) = [];
 CostsSum3(1, :) = [];
 
+AreaSum3.Properties.RowNames = strrep(AreaSum3.Properties.RowNames, 'Local', 'Domestic');
+
 nexttile
 
 Order = {'Base Year','No Policy - 2035', 'Chosen Scenario - 2035'};
@@ -475,8 +435,8 @@ for i = 1:numel(b)
     set(b(i), 'FaceColor', colors2Area(i, :));
 end
  
-ylim([0 85000])
-title('Area', 'FontSize',14,'Position', [2.5, 86296, 0]);
+ylim([0 55000])
+title('Area', 'FontSize',14,'Position', [2, 56296, 0]);
 xticklabels(Order);
 xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);
@@ -495,8 +455,8 @@ for i = 1:numel(b)
     set(b(i), 'FaceColor', colors3Water(i, :));
 end
 
-ylim([0 7500]) 
-title('Water', 'FontSize', 14,'Position', [2.5, 7638, 0]);
+ylim([0 5000]) 
+title('Water', 'FontSize', 14,'Position', [2, 5038, 0]);
 xlabel('Scenarios', 'FontSize', 20);
 xticklabels(Order);
 xtickangle(20);
@@ -522,6 +482,7 @@ colors1Em = [
 NoPolicy = CalcUpDownStream(EmissionsByYearsTest1);
 Scenario2 = CalcUpDownStream(EmissionsByYearsTest3); 
 Order = {'Base Year - 2017', 'No Policy - 2035', 'Chosen Scenario - 2035'};
+NoPolicy.Properties.RowNames = strrep(NoPolicy.Properties.RowNames, 'Local', ' Domestic');
 
 %y = [NoPolicy{1:11,1}, NoPolicy{1:11,34}, Scenario1{1:11,34}, Scenario2{1:11,34}];
 y = [NoPolicy{1:2:11,1}, NoPolicy{1:2:11,19}, Scenario2{1:2:11,19}];
@@ -535,14 +496,14 @@ for i = 1:numel(b)
     set(b(i), 'FaceColor', colors1Em(i, :));
 end
 
-ylim([0 140])
-title('Emissions - Local', 'FontSize', 14,'Position', [2, 145, 0]);
+ylim([0 110])
+title('Emissions - Domestic', 'FontSize', 14,'Position', [2, 115, 0]);
 xticklabels(Order);
 xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);
 
 ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(NoPolicy.Properties.RowNames(1:2:11)), 'FontSize',8,'Location','northwest')
+legend(flip(b), flip(NoPolicy.Properties.RowNames(1:2:11)), 'FontSize',10,'Location','northwest')
 
 
 
@@ -576,17 +537,18 @@ for i = 1:numel(b)
     set(b(i), 'FaceColor', colors1Em(i, :));
 end
 
-ylim([0 140])
-title('Emissions - Global', 'FontSize', 14,'Position', [2, 145, 0]);
+ylim([0 110])
+title('Emissions - Global', 'FontSize', 14,'Position', [2, 115, 0]);
 xticklabels(Order);
 xtickangle(20);
 xlabel('Scenarios', 'FontSize', 20);
 
 ylabel('MtCO2Eq', 'FontSize', 20);
-legend(flip(b), flip(NoPolicy.Properties.RowNames(2:2:11)), 'FontSize',8,'Location','northwest')
+legend(flip(b), flip(NoPolicy.Properties.RowNames(2:2:11)), 'FontSize',10,'Location','northwest')
 
-%% %% NEW NEW NEW - Sensitivity +-10%
-DeltaCell = cell(2, 19); % Initialize DeltaCell as a 2x19 cell array
+%% %% NEW NEW NEW - Sensitivity +-10% (FOR 2035!!)
+
+DeltaCell = cell(2, 19); 
 
 for i = 1:2
     for j = RelevantScenarios 

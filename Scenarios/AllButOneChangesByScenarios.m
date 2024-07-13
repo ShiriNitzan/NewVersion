@@ -1,4 +1,5 @@
 function [AllButOneScenariosTable] = AllButOneChangesByScenarios(Data, ScenarioNumber, Years, S, varargin)
+% S is the vector of precentages
 %% Init
 q = inputParser;
 addOptional(q,'OnlyOne',false);
@@ -9,7 +10,7 @@ parse(q,varargin{:});
 CurrentEnergyConsumptionFromRenewableEnergies = Data.InitialPercentage(3);
 CurrentEnergyConsumptionFromNaturalGas = Data.InitialPercentage(2);
 
-RowNames = {'Population Growth', 'Increased Electricity Per Capita', 'Increase in Desalinared Water', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Change In Energy Consumption From Renewable Energies', 'Electricity Production by Natural Gas','Electricity Saving','Fuel for Energy','Recycled Waste', 'Burning Waste', 'Reduction Of Mileage', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving'};
+RowNames = {'Population Growth', 'Increased Electricity Per Capita', 'Increase in Desalinared Water', 'Reducing Beef Consumption', 'Preventing Food Loss', 'Change In Energy Consumption From Renewable Energies', 'Electricity Production by Natural Gas','Electricity Saving','Fuel for Energy','Recycled Waste', 'Burning Waste', 'Reduction Of Mileage', 'Transition To Public Transportation', 'Transition to Electric Car', 'Transition to Electric Van', 'Transition to Electric Truck', 'Transition to Electric Bus','18', 'Water Saving', 'Vegetarians'};
 ColumnNames = ones(1, Years);
 AllButOneScenariosTable = array2table(zeros(length(S), Years), 'RowNames', RowNames);
 %%ConsumptionChanges = array2table(zeros(sum(Type == "Consumption"), Years),'RowNames', RowNames(Type == 'Consumption'));
@@ -54,7 +55,7 @@ elseif(ScenarioNumber ~= 0 && q.Results.OnlyOne == false)
     ChooseSteps(Delete) = [];
 end
 % Specific Changes
-MilesTonesTable = array2table(zeros(19, Years));
+MilesTonesTable = array2table(zeros(20, Years));
 % MilesTonesTable{6,14} = 0.3;
 % MilesTonesTable{7,14} = 0.7;
 
@@ -107,6 +108,8 @@ AllButOneScenariosTable{9,:} = CalcChangeVector(MilesTonesTable{9,:}, Years, S(9
 AllButOneScenariosTable{12,:} = CalcChangeVector(MilesTonesTable{12,:}, Years, S(12), 'Growth', false);
 AllButOneScenariosTable{13,:} = CalcChangeVector(MilesTonesTable{13,:}, Years, S(13), 'Growth', false);
 AllButOneScenariosTable{19,:} = CalcChangeVector(MilesTonesTable{19,:}, Years, S(19), 'Growth', false);
+AllButOneScenariosTable{20,:} = CalcChangeVector(MilesTonesTable{20,:}, Years, S(20), 'Growth', false);
+
 
 %% Supply
 AllButOneScenariosTable{4,:} = CalcChangeVector(MilesTonesTable{4,:}, Years, S(4) ,'Growth', false);
@@ -164,6 +167,8 @@ for i = 1:Years
 end
 
 AllButOneScenariosTable{18,:} = 1;
+
+
 
 %% Specific Changes
 if(q.Results.OnlyOne == false && ScenarioNumber ~= 0)

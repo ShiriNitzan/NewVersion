@@ -21,6 +21,8 @@ TransitionToElectricTruck = ScenariosTable{16,:};
 TransitionToElectricBus = ScenariosTable{17,:};
 %%Scenario18 = ScenariosTable{18,:}; %% vehicles improved emissions coefficients
 WaterSaving = ScenariosTable{19,:};
+ReducingMeatConsumptionPercentage = ScenariosTable{20,:};
+
 
 %% Preparations - scenario 1`
 
@@ -48,13 +50,20 @@ ColNames = {'Naptha', 'Mazut','Diesel','Kerosene','Gasoline','Liquified Petroleu
  end
 %% Food Emissions & Food Resource Consumption - scenario 4
 
+% including scenario of vegetarian population:
 WaterFromFoodCell = cell(1,Years);
-CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5;
+CaloricCompletion = ones(1,Years) + (1-(ReducingBeefConsumptionPercentage))/5 + (1-(ReducingMeatConsumptionPercentage))/5;
 
 for i=1:Years
     CurrentFoodConsumption = FoodConsumptionCell{i};
-    CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i);
-    CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i);
+    % beef is affected by two scenarios: ReducingBeefConsumption and increade in vegeterian population
+    CurrentFoodConsumption{52,1} = CurrentFoodConsumption{52,1} * ReducingBeefConsumptionPercentage(i) * ReducingMeatConsumptionPercentage(i); %local
+    CurrentFoodConsumption{52,3} = CurrentFoodConsumption{52,3} * ReducingBeefConsumptionPercentage(i) * ReducingMeatConsumptionPercentage(i); %import
+    % other types of meat: 
+    for row = [53, 54, 55, 56, 57, 59, 60, 61]
+        CurrentFoodConsumption{row, 1} = CurrentFoodConsumption{row, 1} * ReducingMeatConsumptionPercentage(i);
+        CurrentFoodConsumption{row, 3} = CurrentFoodConsumption{row, 3} * ReducingMeatConsumptionPercentage(i);
+    end
     for j = 10:14
         CurrentFoodConsumption{j,1} = CurrentFoodConsumption{j,1} * CaloricCompletion(i);
         CurrentFoodConsumption{j,3} = CurrentFoodConsumption{j,3} * CaloricCompletion(i);
@@ -250,7 +259,7 @@ ElectricityBySources.Properties.VariableNames = YearsStringsForColNames;
 PreviousYearElectricity = ElectricityBySources{:,1}; %tables of zeros- for the first iteration.
 addKWHfromFuels = array2table(zeros(3,Years));
 for i=1:Years
-    if i >= 2
+    if (i >= 2 && orderIndex ~= 7 && orderIndex ~= 8) %electricity from fuels is unrelevent for 2035 cases
         addKWHfromFuels{1,i} = (sum(AmountsOfFuelsCells{1,1}{4,:}) - sum(AmountsOfFuelsCells{1,i}{4,:}))*11.63; % Conversion of the amount of fuels to electricity in the case of industrial fuels
         addKWHfromFuels{2,i} = (sum(AmountsOfFuelsCells{1,i}{5,:})-  sum(AmountsOfFuelsCells{1,i}{5,:})*ScenariosTable{9,i} )*11.63; % Conversion of the amount of fuel to electricity in the case of home LPG
         addKWHfromFuels{3,i} = (sum(AmountsOfFuelsCells{1,i}{6,:})-  sum(AmountsOfFuelsCells{1,i}{6,:})*ScenariosTable{9,i} )*11.63; % Conversion of the amount of fuel to electricity in the case of Commercial LPG

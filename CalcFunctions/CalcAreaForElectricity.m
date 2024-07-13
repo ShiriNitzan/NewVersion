@@ -1,10 +1,12 @@
 function [TotalAreaForElectricity] = CalcAreaForElectricity(CurrentYearConsumption ,AreaCoeficients, AreaDistrubustion, AreaType)
-    TotalAreaForElectricity = array2table(zeros(1,4));
+% CurrentYearConsumption - the delta of extra electicity needed from each source    
+
+TotalAreaForElectricity = array2table(zeros(1,4));
     %TotalAreaForElectricity.Properties.VariableNames = {'Coal','Natural Gas','Ground and Large Reserves','Small Reserves', 'Interchanges', 'Large Rooftops', 'Small Rooftops'};
     TotalAreaForElectricity.Properties.VariableNames = {'Coal','Natural Gas','Ground PV','Dual PV'};
 
     % coal
-    if(CurrentYearConsumption(1) <= 0)
+    if(CurrentYearConsumption(1) <= 0) 
         TotalAreaForElectricity{1,1} = 0;
     else    
         TotalAreaForElectricity{1,1} = CurrentYearConsumption(1)*AreaCoeficients(3)/1000; %% units - m^2*10^3

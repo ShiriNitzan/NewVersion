@@ -128,20 +128,21 @@ switch orderIndex
         disp('SensitivityAnalysis');
 
     case 7  % All the steps together - WITH NEW SCENARIO VALUES
-        % first table: change in precentage for each parameter by the years.
-        % second table: population size per year, seperationg israel and the palestinians.
-        % returns: total Co2 by category, amounts of water/fuels/construction materials, all other resources by category, water for food.
+
+        % NOTE: MUST RE-RUN THE WHOLE MainSystem FOR THIS PART!
 
         % NO POLICY
         [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,4}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable1);
         [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1, WaterFromFood1] = FullScenario(DataBase, FullScenariosTable1,Years,population,orderIndex,0);
+        Years = 19; % for 2035
+        EmissionsByYearsTest1 = EmissionsByYearsTest1(:,1:Years);
+        ConsumptionAmounts1 = ConsumptionAmounts1(:,1:Years);
+        Resources1 = Resources1(:,1:Years);
+        WaterFromFood1 = WaterFromFood1(:,1:Years);
 
         % NEW POLICY
-        Years = 19; % for 2035
-        NewValues = readtable("The Three Scenarios.xlsx", 'Sheet', 'Scenarios', 'Range', 'K2:K20', 'ReadRowNames', false, 'ReadVariableNames', false);
-        ScenariosAndValues{:, 8} = NewValues{:,:};
-        [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
+        [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,9}, 'MileStones', false);
         [population] = populationCal(FullScenariosTable3);
         [EmissionsByYearsTest3, ConsumptionAmounts3, Resources3, WaterFromFood3] = FullScenarioCompare(DataBase, FullScenariosTable3,Years,population,WaterFromFood1,orderIndex);
 
@@ -149,45 +150,97 @@ switch orderIndex
 
         % preperations: define the new scenario precentages and the year.
         Years = 19; % for 2035
-        NewValues = readtable("The Three Scenarios.xlsx", 'Sheet', 'Scenarios', 'Range', 'K2:K20', 'ReadRowNames', false, 'ReadVariableNames', false);
-        ScenariosAndValues{:, 8} = NewValues{:,:};
-        RelevantScenarios = [1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 17, 19];  % only choosing interesting scenarios
-
+        RelevantScenarios = [1, 2, 4, 5, 6, 7, 8, 12, 13, 14, 15, 16, 17, 19, 20];  % only choosing interesting scenarios
         rowNames = ScenariosAndValues.Properties.RowNames;
-        SensitivityAnalysisCell = cell(2, height(ScenariosAndValues));
+        RelevantScenarioNames = rowNames(RelevantScenarios);
 
+        SensitivityAnalysisCell = cell(2, height(ScenariosAndValues));
+        TotalEmissionByScenarioChanged = array2table(zeros(3, length(RelevantScenarios)), 'VariableNames', RelevantScenarioNames, 'RowNames', {'as is', '+0.1', '-0.1'});
+        TotalAreaByScenarioChanged = array2table(zeros(3, length(RelevantScenarios)), 'VariableNames', RelevantScenarioNames, 'RowNames', {'as is', '+0.1', '-0.1'});
+        TotalWaterByScenarioChanged = array2table(zeros(3, length(RelevantScenarios)), 'VariableNames', RelevantScenarioNames, 'RowNames', {'as is', '+0.1', '-0.1'});
+
+        renewable_original = ScenariosAndValues{6,9};
+        gas_original = ScenariosAndValues{7,9};
         % SensitivityAnalysisCell has 12 columns, each of them represent a different scenario.
-        % the upper row is Original_Precentage - 10%_Bigger
-        % the lower row is Original_Precentage - 10%_Smaller
+        % the upper row is Original_Precentage - 10%_Bigger,  the lower row is Original_Precentage - 10%_Smaller
+
         for i = 1:length(RelevantScenarios)
 
             ScenarioIndex = RelevantScenarios(i); % iterarting through all the relevant scenarios
-            OriginalPrecentage = ScenariosAndValues{ScenarioIndex, 8}; % saving the original value
+            OriginalPrecentage = ScenariosAndValues{ScenarioIndex, 9}; % saving the original value
 
             % running FULL SCENARIO 3 times: as is, +10%, -10%.
-            [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
+            [FullScenariosTable1] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,9}, 'MileStones', false);
             [population] = populationCal(FullScenariosTable1);
             [EmissionsByYearsTest1, ConsumptionAmounts1, Resources1, WaterFromFood1] = FullScenario(DataBase, FullScenariosTable1,Years,population,orderIndex,0);
             TotalEmission1 = CalcUpDownStream(EmissionsByYearsTest1);
+            Emission1_Sum = sum(TotalEmission1{1:11, 19});
+            [AreaSum1, CostsSum1, WaterSum1] = CalcTotalResources(Resources1, ConsumptionAmounts1, WaterFromFood1);
+            Area1_Sum = sum(AreaSum1{1:4, 19});
+            Water1_Sum = sum(WaterSum1{1:5, 19});
 
-            ScenariosAndValues{ScenarioIndex, 8} = OriginalPrecentage * 1.1; % new calculation for +10%
-            [FullScenariosTable2] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
+            % new calculation for +10%
+            ScenariosAndValues{ScenarioIndex, 9} = OriginalPrecentage + 0.1;
+            if ScenarioIndex==6
+               ScenariosAndValues{7,9} = gas_original - 0.1; % if renewable is 10% higher, we substract it from gas
+            end
+            if ScenarioIndex==7
+               ScenariosAndValues{6,9} = renewable_original - 0.1; % if gas is 10% higher, we substract it from renewable
+            end
+            [FullScenariosTable2] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,9}, 'MileStones', false);
             [population] = populationCal(FullScenariosTable2);
             [EmissionsByYearsTest2, ConsumptionAmounts2, Resources2, WaterFromFood2] = FullScenario(DataBase, FullScenariosTable2,Years,population,orderIndex,0);
             TotalEmission2 = CalcUpDownStream(EmissionsByYearsTest2);
+            Emission2_Sum = sum(TotalEmission2{1:11, 19});
+            [AreaSum2, CostsSum2, WaterSum2] = CalcTotalResources(Resources2, ConsumptionAmounts2, WaterFromFood2);
+            Area2_Sum = sum(AreaSum2{1:4, 19});
+            Water2_Sum = sum(WaterSum2{1:5, 19});
 
-            ScenariosAndValues{ScenarioIndex, 8} = OriginalPrecentage * 0.9 ; % new calculation for -10%
-            [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,8}, 'MileStones', false);
+            ScenariosAndValues{6,9} = renewable_original; %restart
+            ScenariosAndValues{7,9} = gas_original;
+
+            % new calculation for -10%
+            ScenariosAndValues{ScenarioIndex, 9} = OriginalPrecentage - 0.1 ; % new calculation for -10%
+            if ScenarioIndex==6
+               ScenariosAndValues{7,9} = gas_original + 0.1; % if renewable is 10% lower, we add it to gas
+            end
+            if ScenarioIndex==7
+               ScenariosAndValues{6,9} = renewable_original + 0.1; % if gas is 10% lower, we add it to renewable
+            end
+            [FullScenariosTable3] = AllButOneChangesByScenarios(DataBase, 0, Years, ScenariosAndValues{:,9}, 'MileStones', false);
             [population] = populationCal(FullScenariosTable3);
             [EmissionsByYearsTest3, ConsumptionAmounts3, Resources3, WaterFromFood3] = FullScenario(DataBase, FullScenariosTable3,Years,population,orderIndex,0);
             TotalEmission3 = CalcUpDownStream(EmissionsByYearsTest3);
+            Emission3_Sum = sum(TotalEmission3{1:11, 19});
+            [AreaSum3, CostsSum3, WaterSum3] = CalcTotalResources(Resources3, ConsumptionAmounts3, WaterFromFood3);
+            Area3_Sum = sum(AreaSum3{1:4, 19});
+            Water3_Sum = sum(WaterSum3{1:5, 19});
+
+            ScenariosAndValues{6,9} = renewable_original; %restart
+            ScenariosAndValues{7,9} = gas_original;
 
             BiggerMinusOriginal = TotalEmission2 - TotalEmission1;
             OriginalMinusSmaller = TotalEmission1 - TotalEmission3;
 
-            ScenariosAndValues{ScenarioIndex, 8} = OriginalPrecentage ; % RESET
+            % delta tables:
+            ScenariosAndValues{ScenarioIndex, 9} = OriginalPrecentage ; % RESET
             SensitivityAnalysisCell{1, ScenarioIndex} = BiggerMinusOriginal;
             SensitivityAnalysisCell{2, ScenarioIndex} = OriginalMinusSmaller;
+
+            % summarized emission table:
+            TotalEmissionByScenarioChanged{1, i} = Emission1_Sum;
+            TotalEmissionByScenarioChanged{2, i} = Emission2_Sum;
+            TotalEmissionByScenarioChanged{3, i} = Emission3_Sum;
+
+            % summarized area table:
+            TotalAreaByScenarioChanged{1, i} = Area1_Sum;
+            TotalAreaByScenarioChanged{2, i} = Area2_Sum;
+            TotalAreaByScenarioChanged{3, i} = Area3_Sum;
+
+            % summarized water table:
+            TotalWaterByScenarioChanged{1, i} = Water1_Sum;
+            TotalWaterByScenarioChanged{2, i} = Water2_Sum;
+            TotalWaterByScenarioChanged{3, i} = Water3_Sum;
 
             disp('SensitivityAnalysis');
 
